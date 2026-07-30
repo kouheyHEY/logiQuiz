@@ -5,6 +5,7 @@ describe("GameStatusHeader", () => {
     const baseProps = {
         life: 1,
         winStreak: 0,
+        aikoCount: 0,
         timeLeft: 0,
         timerState: "running" as const,
         isTimerValid: true,
@@ -13,6 +14,11 @@ describe("GameStatusHeader", () => {
     it("ライフがヘッダーに表示される", () => {
         render(<GameHeader {...baseProps} life={2} />);
         expect(screen.getByText("ライフ: 2")).toBeInTheDocument();
+    });
+
+    it("AIKOの累計数がヘッダーに表示される", () => {
+        render(<GameHeader {...baseProps} aikoCount={4} />);
+        expect(screen.getByText("AIKO: 4")).toBeInTheDocument();
     });
 
     // Requirements 1.2: winStreak=5 が "連勝数" ラベルとともに表示されること

@@ -85,6 +85,12 @@ export default function BattleStage({ sequence }: BattleStageProps) {
                       ? "オープン！"
                       : "カードを出す…"}
             </div>
+
+            {isResolved && sequence.result === "draw" ? (
+                <div className="battle-stage__aiko-overlay" aria-hidden="true">
+                    <span>AIKO</span>
+                </div>
+            ) : null}
         </section>
     );
 }

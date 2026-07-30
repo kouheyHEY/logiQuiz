@@ -1,13 +1,15 @@
 /**
  * 引数の型
  */
-import { Heart, Trophy, Clock2 } from "lucide-react";
+import { Heart, Trophy, Clock2, Equal } from "lucide-react";
 
 export type GameHeaderProps = {
     /** ライフ */
     life?: number;
     /** 連勝数 */
     winStreak: number;
+    /** あいこの累計数 */
+    aikoCount: number;
     /** 残り時間 */
     timeLeft: number;
     /** タイマーの状態 */
@@ -24,6 +26,7 @@ export type GameHeaderProps = {
 export default function GameHeader({
     life = 1,
     winStreak,
+    aikoCount,
     timeLeft,
     isTimerValid,
 }: GameHeaderProps) {
@@ -37,6 +40,10 @@ export default function GameHeader({
                 <div className="game-header__row">
                     <Trophy size={20} />
                     <h2>連勝数: {winStreak}</h2>
+                </div>
+                <div className="game-header__row game-header__row--aiko">
+                    <Equal size={20} />
+                    <h2>AIKO: {aikoCount}</h2>
                 </div>
                 <div className="game-header__row">
                     <Clock2 size={20} />

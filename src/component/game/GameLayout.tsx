@@ -10,6 +10,7 @@ import type { Deck } from "./gameLogic";
 export type GameLayoutProps = {
     life?: number;
     winStreak?: number;
+    aikoCount?: number;
     timeLeft?: number;
     timerState?: GameHeaderProps["timerState"];
     isTimerValid?: boolean;
@@ -29,6 +30,7 @@ export type GameLayoutProps = {
 export default function GameLayout({
     life = 1,
     winStreak = 0,
+    aikoCount = 0,
     timeLeft = 0,
     timerState = "paused",
     isTimerValid = false,
@@ -47,6 +49,7 @@ export default function GameLayout({
     const headerProps: GameHeaderProps = {
         life,
         winStreak,
+        aikoCount,
         timeLeft,
         timerState,
         isTimerValid,

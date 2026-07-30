@@ -14,6 +14,7 @@ import {
 function GameView() {
     const [life, setLife] = useState(1);
     const [winStreak, setWinStreak] = useState(0);
+    const [aikoCount, setAikoCount] = useState(0);
     const [currentOpponent, setCurrentOpponent] = useState(1);
     const [message, setMessage] = useState(
         "グー・チョキ・パーのいずれかを選択してください。",
@@ -35,6 +36,7 @@ function GameView() {
 
         if (isStrongEnemyBattle) {
             if (result === "draw") {
+                setAikoCount((prev) => prev + 1);
                 setEnemyState(nextEnemyState);
                 setMessage(
                     `強敵の出した手は ${opponent}。あいこです。`,
@@ -80,6 +82,7 @@ function GameView() {
         }
 
         if (result === "draw") {
+            setAikoCount((prev) => prev + 1);
             setEnemyState(nextEnemyState);
             setMessage(
                 `相手の出した手は ${opponent}。あいこです。`,
@@ -143,6 +146,7 @@ function GameView() {
             <GameLayout
                 life={life}
                 winStreak={winStreak}
+                aikoCount={aikoCount}
                 timeLeft={0}
                 timerState="paused"
                 isTimerValid={false}

@@ -131,6 +131,14 @@ button:disabled {
     font-weight: 650;
 }
 
+.game-header__row--aiko {
+    color: #facc15;
+}
+
+.game-header__row--aiko h2 {
+    color: #fef08a;
+}
+
 .game-opponent {
     display: flex;
     align-items: center;
@@ -307,7 +315,8 @@ button:disabled {
     }
 
     .battle-card,
-    .battle-stage__result {
+    .battle-stage__result,
+    .battle-stage__aiko-overlay {
         animation-duration: 0.01ms;
     }
 
@@ -449,6 +458,57 @@ button:disabled {
 
 .battle-stage--resolved.battle-stage--draw .battle-card__face {
     border-color: #eab308;
+}
+
+.battle-stage__aiko-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    background: radial-gradient(
+        circle at center,
+        rgba(250, 204, 21, 0.2),
+        transparent 42%
+    );
+    animation: aiko-screen-impact 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.battle-stage__aiko-overlay span {
+    color: #fef08a;
+    font-family: var(--heading);
+    font-size: clamp(4.5rem, 19vw, 10rem);
+    font-weight: 1000;
+    letter-spacing: 0.08em;
+    line-height: 0.9;
+    -webkit-text-stroke: clamp(2px, 0.5vw, 5px) #3b0764;
+    text-shadow:
+        0 0 12px rgba(250, 204, 21, 0.9),
+        0 0 38px rgba(170, 59, 255, 0.85),
+        0 12px 0 rgba(59, 7, 100, 0.55);
+}
+
+@keyframes aiko-screen-impact {
+    0% {
+        opacity: 0;
+        transform: scale(0.2) rotate(-9deg);
+    }
+    28% {
+        opacity: 1;
+        transform: scale(1.16) rotate(2deg);
+    }
+    45% {
+        transform: scale(0.96) rotate(0);
+    }
+    78% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.08);
+    }
 }
 
 @keyframes player-card-enter {
