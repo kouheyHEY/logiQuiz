@@ -134,11 +134,11 @@ button:disabled {
 }
 
 .game-header__row--aiko {
-    color: #facc15;
+    color: #c084fc;
 }
 
 .game-header__row--aiko h2 {
-    color: #fef08a;
+    color: #d8b4fe;
 }
 
 .game-opponent {
@@ -477,6 +477,7 @@ button:disabled {
     z-index: 100;
     display: grid;
     place-items: center;
+    overflow: hidden;
     pointer-events: none;
     background: radial-gradient(
         circle at center,
@@ -484,37 +485,30 @@ button:disabled {
         rgba(15, 23, 42, 0.08) 38%,
         transparent 62%
     );
-    animation: aiko-screen-fade 1.65s ease-in-out both;
+    animation: aiko-screen-fade 1.8s ease-in-out both;
 }
 
 .battle-stage__aiko-overlay span {
-    box-sizing: border-box;
-    padding: 0.18em 0.28em 0.22em;
-    border: clamp(3px, 0.65vw, 7px) solid #f5f3ff;
-    border-radius: 0.18em;
-    background: #4c1d95;
     color: #ffffff;
     font-family: var(--heading);
     font-size: clamp(4.5rem, 19vw, 10rem);
     font-weight: 1000;
     letter-spacing: 0.08em;
     line-height: 0.9;
-    -webkit-text-stroke: clamp(1px, 0.24vw, 3px) #1e1b4b;
+    -webkit-text-stroke: clamp(4px, 0.75vw, 8px) #581c87;
+    paint-order: stroke fill;
     text-shadow:
-        0 4px 0 #1e1b4b,
-        0 8px 24px rgba(15, 23, 42, 0.72);
-    box-shadow:
-        0 0 0 clamp(2px, 0.35vw, 4px) #6d28d9,
-        0 18px 54px rgba(15, 23, 42, 0.52);
-    animation: aiko-letter-float 1.65s ease-in-out both;
+        0 5px 0 #2e1065,
+        0 12px 32px rgba(15, 23, 42, 0.78);
+    animation: aiko-letter-shrink 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes aiko-screen-fade {
     0% {
         opacity: 0;
     }
-    20%,
-    72% {
+    12%,
+    76% {
         opacity: 1;
     }
     100% {
@@ -522,21 +516,22 @@ button:disabled {
     }
 }
 
-@keyframes aiko-letter-float {
+@keyframes aiko-letter-shrink {
     0% {
-        transform: translateY(24px) scale(0.84) rotate(-8deg);
+        transform: scale(2.7) rotate(-9deg);
     }
     24% {
-        transform: translateY(0) scale(1.02) rotate(3deg);
+        transform: scale(1.72) rotate(4deg);
     }
-    48% {
-        transform: translateY(-5px) scale(1) rotate(-2deg);
+    52% {
+        transform: scale(0.96) rotate(-1.5deg);
     }
-    72% {
-        transform: translateY(-2px) scale(1.01) rotate(1deg);
+    64%,
+    78% {
+        transform: scale(1) rotate(0);
     }
     100% {
-        transform: translateY(-22px) scale(0.94) rotate(7deg);
+        transform: scale(0.98) rotate(0);
     }
 }
 

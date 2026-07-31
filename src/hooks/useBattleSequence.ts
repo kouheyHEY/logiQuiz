@@ -19,7 +19,7 @@ const normalDurations = {
     dealing: 420,
     revealing: 620,
     resolved: 900,
-    drawResolved: 1650,
+    drawResolved: 1800,
 };
 
 const reducedMotionDurations = {

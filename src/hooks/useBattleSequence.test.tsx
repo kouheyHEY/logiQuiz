@@ -54,7 +54,7 @@ describe("useBattleSequence", () => {
         vi.useRealTimers();
     });
 
-    it("あいこの結果表示だけ1650ms維持する", () => {
+    it("あいこの結果表示だけ1800ms維持する", () => {
         vi.useFakeTimers();
         const drawBattle: BattlePayload = {
             playerHand: "グー",
@@ -73,7 +73,7 @@ describe("useBattleSequence", () => {
         expect(screen.getByText("resolved")).toBeInTheDocument();
 
         act(() => {
-            vi.advanceTimersByTime(1649);
+            vi.advanceTimersByTime(1799);
         });
         expect(screen.getByText("resolved")).toBeInTheDocument();
 
