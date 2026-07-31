@@ -7,12 +7,18 @@ const battle: BattlePayload = {
     result: "win",
 };
 
-function Harness({ onResolve }: { onResolve: (value: BattlePayload) => void }) {
+function Harness({
+    onResolve,
+    payload = battle,
+}: {
+    onResolve: (value: BattlePayload) => void;
+    payload?: BattlePayload;
+}) {
     const { sequence, start } = useBattleSequence(onResolve);
 
     return (
         <>
-            <button type="button" onClick={() => start(battle)}>
+            <button type="button" onClick={() => start(payload)}>
                 start
             </button>
             <span>{sequence?.phase ?? "idle"}</span>
@@ -42,6 +48,37 @@ describe("useBattleSequence", () => {
 
         act(() => {
             vi.advanceTimersByTime(900);
+        });
+        expect(screen.getByText("idle")).toBeInTheDocument();
+
+        vi.useRealTimers();
+    });
+
+    it("あいこの結果表示だけ1650ms維持する", () => {
+        vi.useFakeTimers();
+        const drawBattle: BattlePayload = {
+            playerHand: "グー",
+            opponentHand: "グー",
+            result: "draw",
+        };
+        render(<Harness onResolve={vi.fn()} payload={drawBattle} />);
+
+        fireEvent.click(screen.getByRole("button", { name: "start" }));
+        act(() => {
+            vi.advanceTimersByTime(420);
+        });
+        act(() => {
+            vi.advanceTimersByTime(620);
+        });
+        expect(screen.getByText("resolved")).toBeInTheDocument();
+
+        act(() => {
+            vi.advanceTimersByTime(1649);
+        });
+        expect(screen.getByText("resolved")).toBeInTheDocument();
+
+        act(() => {
+            vi.advanceTimersByTime(1);
         });
         expect(screen.getByText("idle")).toBeInTheDocument();
 

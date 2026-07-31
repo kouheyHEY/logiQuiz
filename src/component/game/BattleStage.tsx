@@ -39,7 +39,15 @@ function Face({
 
 export default function BattleStage({ sequence }: BattleStageProps) {
     if (!sequence) {
-        return null;
+        return (
+            <section
+                className="battle-stage battle-stage--idle"
+                aria-hidden="true"
+            >
+                <div className="battle-stage__field" />
+                <div className="battle-stage__result" />
+            </section>
+        );
     }
 
     const isRevealed = sequence.phase !== "dealing";

@@ -19,12 +19,14 @@ const normalDurations = {
     dealing: 420,
     revealing: 620,
     resolved: 900,
+    drawResolved: 1650,
 };
 
 const reducedMotionDurations = {
     dealing: 30,
     revealing: 30,
     resolved: 120,
+    drawResolved: 180,
 };
 
 export function useBattleSequence(
@@ -78,9 +80,13 @@ export function useBattleSequence(
             return () => window.clearTimeout(timeoutId);
         }
 
+        const resolvedDuration =
+            sequence.result === "draw"
+                ? durations.drawResolved
+                : durations.resolved;
         const timeoutId = window.setTimeout(() => {
             setSequence(null);
-        }, durations.resolved);
+        }, resolvedDuration);
         return () => window.clearTimeout(timeoutId);
     }, [sequence]);
 

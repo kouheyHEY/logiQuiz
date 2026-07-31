@@ -2,6 +2,20 @@ import { render, screen } from "@testing-library/react";
 import BattleStage from "./BattleStage";
 
 describe("BattleStage", () => {
+    it("待機中もバトルフィールドの領域を描画する", () => {
+        const { container } = render(<BattleStage sequence={null} />);
+
+        expect(
+            container.querySelector(".battle-stage--idle"),
+        ).toBeInTheDocument();
+        expect(
+            container.querySelector(".battle-stage__field"),
+        ).toBeInTheDocument();
+        expect(
+            container.querySelector(".battle-stage__result"),
+        ).toBeInTheDocument();
+    });
+
     it("公開フェーズでは相手カードにめくり状態を付ける", () => {
         const { container } = render(
             <BattleStage

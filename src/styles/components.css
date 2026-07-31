@@ -29,6 +29,8 @@ button {
     font-size: 16px;
     color: var(--surface-text-h);
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     transition: all 0.2s ease;
 }
 
@@ -316,7 +318,8 @@ button:disabled {
 
     .battle-card,
     .battle-stage__result,
-    .battle-stage__aiko-overlay {
+    .battle-stage__aiko-overlay,
+    .battle-stage__aiko-overlay span {
         animation-duration: 0.01ms;
     }
 
@@ -344,6 +347,10 @@ button:disabled {
     background:
         radial-gradient(circle at center, rgba(170, 59, 255, 0.12), transparent 55%),
         rgba(255, 255, 255, 0.06);
+}
+
+.battle-stage--idle {
+    pointer-events: none;
 }
 
 .battle-stage__field {
@@ -435,11 +442,15 @@ button:disabled {
 }
 
 .battle-stage__result {
-    min-height: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.5em;
     color: var(--text-h);
     font-size: 0.88rem;
     font-weight: 850;
     letter-spacing: 0.04em;
+    line-height: 1.5;
 }
 
 .battle-stage--resolved .battle-stage__result {
@@ -469,45 +480,63 @@ button:disabled {
     pointer-events: none;
     background: radial-gradient(
         circle at center,
-        rgba(250, 204, 21, 0.2),
-        transparent 42%
+        rgba(124, 58, 237, 0.24),
+        rgba(15, 23, 42, 0.08) 38%,
+        transparent 62%
     );
-    animation: aiko-screen-impact 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: aiko-screen-fade 1.65s ease-in-out both;
 }
 
 .battle-stage__aiko-overlay span {
-    color: #fef08a;
+    box-sizing: border-box;
+    padding: 0.18em 0.28em 0.22em;
+    border: clamp(3px, 0.65vw, 7px) solid #f5f3ff;
+    border-radius: 0.18em;
+    background: #4c1d95;
+    color: #ffffff;
     font-family: var(--heading);
     font-size: clamp(4.5rem, 19vw, 10rem);
     font-weight: 1000;
     letter-spacing: 0.08em;
     line-height: 0.9;
-    -webkit-text-stroke: clamp(2px, 0.5vw, 5px) #3b0764;
+    -webkit-text-stroke: clamp(1px, 0.24vw, 3px) #1e1b4b;
     text-shadow:
-        0 0 12px rgba(250, 204, 21, 0.9),
-        0 0 38px rgba(170, 59, 255, 0.85),
-        0 12px 0 rgba(59, 7, 100, 0.55);
+        0 4px 0 #1e1b4b,
+        0 8px 24px rgba(15, 23, 42, 0.72);
+    box-shadow:
+        0 0 0 clamp(2px, 0.35vw, 4px) #6d28d9,
+        0 18px 54px rgba(15, 23, 42, 0.52);
+    animation: aiko-letter-float 1.65s ease-in-out both;
 }
 
-@keyframes aiko-screen-impact {
+@keyframes aiko-screen-fade {
     0% {
         opacity: 0;
-        transform: scale(0.2) rotate(-9deg);
     }
-    28% {
+    20%,
+    72% {
         opacity: 1;
-        transform: scale(1.16) rotate(2deg);
-    }
-    45% {
-        transform: scale(0.96) rotate(0);
-    }
-    78% {
-        opacity: 1;
-        transform: scale(1);
     }
     100% {
         opacity: 0;
-        transform: scale(1.08);
+    }
+}
+
+@keyframes aiko-letter-float {
+    0% {
+        transform: translateY(24px) scale(0.84) rotate(-8deg);
+    }
+    24% {
+        transform: translateY(0) scale(1.02) rotate(3deg);
+    }
+    48% {
+        transform: translateY(-5px) scale(1) rotate(-2deg);
+    }
+    72% {
+        transform: translateY(-2px) scale(1.01) rotate(1deg);
+    }
+    100% {
+        transform: translateY(-22px) scale(0.94) rotate(7deg);
     }
 }
 
@@ -567,6 +596,9 @@ button:disabled {
     border: 1px solid rgba(107, 99, 117, 0.16);
     background: linear-gradient(180deg, #ffffff 0%, #f7f5ff 100%);
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04);
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
     display: flex;
     flex-direction: column;
     align-items: center;
