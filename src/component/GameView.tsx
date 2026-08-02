@@ -173,6 +173,17 @@ function GameView() {
 
     const handleRetry = () => {
         finishBattle();
+
+        if (gameOver) {
+            setLife(INITIAL_LIFE);
+            setGameOver(false);
+            setWinStreak(0);
+            setStrongEnemyWins(0);
+            setEnemyState(createEnemyBattleState(enemyState.profile));
+            setMessage("ライフを回復し、同じ相手にリトライします。");
+            return;
+        }
+
         setMessage("もう一度カードを選択してください。");
     };
 
@@ -214,7 +225,7 @@ function GameView() {
                 isGameOver={gameOver}
                 deck={initialDeck}
                 tutorialHand={showCardTutorial ? "パー" : undefined}
-                onRetry={gameOver ? undefined : handleRetry}
+                onRetry={handleRetry}
                 onCardSelect={
                     gameOver || isBattlePlaying
                         ? undefined
