@@ -356,6 +356,10 @@ button:disabled {
     .battle-card__inner {
         transition-duration: 0.01ms;
     }
+
+    .card-pad__item.is-tutorial-target .card-button {
+        animation: none;
+    }
 }
 
 .game-status__tag {
@@ -599,6 +603,71 @@ button:disabled {
     gap: clamp(0.35rem, 2vw, 0.75rem);
     overflow-x: auto;
     padding: 0.2rem 0;
+}
+
+.card-pad__item {
+    position: relative;
+    display: flex;
+}
+
+.card-pad--tutorial {
+    overflow: visible;
+}
+
+.card-tutorial__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(10, 8, 18, 0.72);
+    backdrop-filter: blur(1.5px);
+}
+
+.card-pad__item.is-tutorial-target {
+    z-index: 101;
+}
+
+.card-pad__item.is-tutorial-target .card-button {
+    border-color: #c084fc;
+    box-shadow:
+        0 0 0 4px rgba(192, 132, 252, 0.42),
+        0 0 36px rgba(192, 132, 252, 0.72);
+    animation: tutorial-card-pulse 1.25s ease-in-out infinite;
+}
+
+.card-tutorial__hint {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.8rem);
+    z-index: 1;
+    width: max-content;
+    max-width: calc(100vw - 1.5rem);
+    padding: 0.55rem 0.8rem;
+    border: 2px solid #e9d5ff;
+    border-radius: 12px;
+    background: #581c87;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 800;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.card-tutorial__hint::after {
+    content: "";
+    position: absolute;
+    right: 2rem;
+    top: 100%;
+    border: 8px solid transparent;
+    border-top-color: #e9d5ff;
+}
+
+@keyframes tutorial-card-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.06);
+    }
 }
 
 .card-pad--opponent {

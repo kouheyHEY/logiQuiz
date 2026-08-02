@@ -18,6 +18,10 @@ import {
     getNextEnemyAfterVictory,
     tutorialEnemy,
 } from "./game/enemyLogic";
+import {
+    completeTutorial,
+    hasCompletedTutorial,
+} from "./game/tutorialStorage";
 
 function GameView() {
     const [life, setLife] = useState(INITIAL_LIFE);
@@ -35,6 +39,9 @@ function GameView() {
         createEnemyLoopState(),
     );
     const [strongEnemyWins, setStrongEnemyWins] = useState(0);
+    const [showCardTutorial, setShowCardTutorial] = useState(
+        () => !hasCompletedTutorial(),
+    );
 
     const isStrongEnemyBattle =
         enemyState.profile.isStrong === true && !gameOver;
@@ -172,6 +179,10 @@ function GameView() {
         }
 
         const opponent = enemyState.plannedHand;
+        if (showCardTutorial && chosen === "パー") {
+            completeTutorial();
+            setShowCardTutorial(false);
+        }
         setMessage(`${chosen}を出した。相手のカードがめくられる……`);
         startBattle({
             playerHand: chosen,
@@ -196,6 +207,7 @@ function GameView() {
                 isMessageVisible
                 isGameOver={gameOver}
                 deck={initialDeck}
+                tutorialHand={showCardTutorial ? "パー" : undefined}
                 onCardSelect={
                     gameOver || isBattlePlaying
                         ? undefined

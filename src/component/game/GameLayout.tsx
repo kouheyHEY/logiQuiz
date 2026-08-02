@@ -5,7 +5,7 @@ import EnemyPanel from "./EnemyPanel";
 import type { EnemyProfile } from "./enemyLogic";
 import type { GameAreaProps } from "./GameArea";
 import GameArea from "./GameArea";
-import { INITIAL_LIFE, type Deck } from "./gameLogic";
+import { INITIAL_LIFE, type Deck, type Hand } from "./gameLogic";
 
 export type GameLayoutProps = {
     life?: number;
@@ -22,6 +22,7 @@ export type GameLayoutProps = {
     isGameOver?: boolean;
     onCardSelect?: GameAreaProps["onCardSelect"];
     deck?: Deck;
+    tutorialHand?: Hand;
 };
 
 export default function GameLayout({
@@ -39,6 +40,7 @@ export default function GameLayout({
     isGameOver = false,
     onCardSelect,
     deck,
+    tutorialHand,
 }: GameLayoutProps) {
     const headerProps: GameHeaderProps = {
         life,
@@ -71,6 +73,7 @@ export default function GameLayout({
                 messageTone={isGameOver ? "danger" : "default"}
                 onCardSelect={onCardSelect}
                 deck={deck}
+                tutorialHand={tutorialHand}
             />
         </div>
     );

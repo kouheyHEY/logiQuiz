@@ -7,6 +7,7 @@ export type GameAreaProps = {
     onCardSelect?: CardPadProps["onCardSelect"];
     deck?: CardPadProps["deck"];
     messageTone?: "default" | "danger";
+    tutorialHand?: CardPadProps["tutorialHand"];
 };
 
 export default function GameArea({
@@ -15,10 +16,15 @@ export default function GameArea({
     onCardSelect,
     deck,
     messageTone = "default",
+    tutorialHand,
 }: GameAreaProps) {
     return (
         <div className="game-area">
-            <CardPad onCardSelect={onCardSelect} deck={deck} />
+            <CardPad
+                onCardSelect={onCardSelect}
+                deck={deck}
+                tutorialHand={tutorialHand}
+            />
             <MessageWindow
                 message={message}
                 isVisible={isMessageVisible}

@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import GameArea from "./GameArea";
 
 describe("GameArea", () => {
@@ -55,5 +56,27 @@ describe("GameArea", () => {
     it("isMessageVisible=false のとき message が非表示になる", () => {
         render(<GameArea message="非表示テスト" isMessageVisible={false} />);
         expect(screen.queryByText("非表示テスト")).not.toBeInTheDocument();
+    });
+
+    it("初回チュートリアルではパーだけを前面で操作できる", async () => {
+        const user = userEvent.setup();
+        const onCardSelect = vi.fn();
+        const { container } = render(
+            <GameArea
+                message="チュートリアル"
+                tutorialHand="パー"
+                onCardSelect={onCardSelect}
+            />,
+        );
+
+        expect(screen.getByText("パーを選んでみよう")).toBeInTheDocument();
+        expect(container.querySelector(".card-tutorial__overlay")).toBeTruthy();
+        expect(screen.getByRole("button", { name: "グー" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "チョキ" })).toBeDisabled();
+        const paper = screen.getByRole("button", { name: "パー" });
+        expect(paper).toBeEnabled();
+
+        await user.click(paper);
+        expect(onCardSelect).toHaveBeenCalledWith("パー");
     });
 });
