@@ -10,6 +10,7 @@ describe("GameView", () => {
 
     afterEach(() => {
         vi.useRealTimers();
+        vi.restoreAllMocks();
         window.localStorage.clear();
     });
 
@@ -19,6 +20,9 @@ describe("GameView", () => {
         });
         act(() => {
             vi.advanceTimersByTime(620);
+        });
+        act(() => {
+            vi.advanceTimersByTime(1800);
         });
     };
 
@@ -53,5 +57,42 @@ describe("GameView", () => {
         expect(
             screen.getByRole("button", { name: "チョキ、使用可能" }),
         ).toBeEnabled();
+    });
+
+    it("リトライすると相手と強敵までの進行を最初から作り直す", () => {
+        vi.spyOn(Math, "random").mockReturnValue(0);
+        const { container } = render(<GameView />);
+
+        const play = (name: string) => {
+            fireEvent.click(screen.getByRole("button", { name }));
+            resolveCurrentBattle();
+        };
+        const expectOpponent = (number: number) => {
+            expect(
+                container.querySelector(".enemy-panel__number"),
+            ).toHaveTextContent(`対戦相手 ${number}`);
+        };
+
+        // チュートリアル後、通常敵を1人倒してボス進行を1つ進める。
+        play("パー、使用可能");
+        play("パー、使用可能");
+        expectOpponent(3);
+
+        // グーを出す通常敵に敗北してリトライする。
+        play("チョキ、使用可能");
+        fireEvent.click(screen.getByRole("button", { name: "リトライ" }));
+
+        expectOpponent(1);
+        expect(screen.getByText("グーを出したい男")).toBeInTheDocument();
+        expect(screen.queryByText("強敵")).not.toBeInTheDocument();
+
+        // 以前の1勝は破棄され、改めて通常敵を3人倒してから強敵になる。
+        play("パー、使用可能");
+        play("パー、使用可能");
+        expect(screen.queryByText("強敵")).not.toBeInTheDocument();
+
+        play("パー、使用可能");
+        expect(screen.getByText("強敵")).toBeInTheDocument();
+        expectOpponent(4);
     });
 });

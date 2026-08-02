@@ -174,17 +174,33 @@ function GameView() {
     const handleRetry = () => {
         finishBattle();
 
+        const nextEnemyLoop = createEnemyLoopState();
+        const retryProfile =
+            enemyState.profile.id === tutorialEnemy.id
+                ? tutorialEnemy
+                : getNextEnemyAfterVictory(
+                      tutorialEnemy,
+                      nextEnemyLoop,
+                  ).profile;
+
+        setCurrentOpponent(1);
+        setEnemyLoop(nextEnemyLoop);
+        setEnemyState(createEnemyBattleState(retryProfile));
+        setStrongEnemyWins(0);
+        setWinStreak(0);
+
         if (gameOver) {
             setLife(INITIAL_LIFE);
             setGameOver(false);
-            setWinStreak(0);
-            setStrongEnemyWins(0);
-            setEnemyState(createEnemyBattleState(enemyState.profile));
-            setMessage("ライフを回復し、同じ相手にリトライします。");
+            setMessage(
+                "ライフを回復し、相手とボスまでの進行をリセットしました。",
+            );
             return;
         }
 
-        setMessage("もう一度カードを選択してください。");
+        setMessage(
+            "相手とボスまでの進行をリセットしました。カードを選択してください。",
+        );
     };
 
     const handleCardSelect = (chosen: Hand) => {
