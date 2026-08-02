@@ -168,7 +168,13 @@ function GameView() {
         sequence: battleSequence,
         isPlaying: isBattlePlaying,
         start: startBattle,
+        finish: finishBattle,
     } = useBattleSequence(resolveBattle);
+
+    const handleRetry = () => {
+        finishBattle();
+        setMessage("もう一度カードを選択してください。");
+    };
 
     const handleCardSelect = (chosen: Hand) => {
         if (
@@ -208,6 +214,7 @@ function GameView() {
                 isGameOver={gameOver}
                 deck={initialDeck}
                 tutorialHand={showCardTutorial ? "パー" : undefined}
+                onRetry={gameOver ? undefined : handleRetry}
                 onCardSelect={
                     gameOver || isBattlePlaying
                         ? undefined

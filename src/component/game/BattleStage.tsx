@@ -5,6 +5,7 @@ import type { Hand as HandType } from "./gameLogic";
 
 export type BattleStageProps = {
     sequence: BattleSequence | null;
+    onRetry?: () => void;
 };
 
 const handIcons: Record<HandType, LucideIcon> = {
@@ -37,7 +38,7 @@ function Face({
     );
 }
 
-export default function BattleStage({ sequence }: BattleStageProps) {
+export default function BattleStage({ sequence, onRetry }: BattleStageProps) {
     if (!sequence) {
         return (
             <section
@@ -93,6 +94,16 @@ export default function BattleStage({ sequence }: BattleStageProps) {
                       ? "オープン！"
                       : "カードを出す…"}
             </div>
+
+            {isResolved && sequence.result === "lose" && onRetry ? (
+                <button
+                    type="button"
+                    className="battle-stage__retry"
+                    onClick={onRetry}
+                >
+                    リトライ
+                </button>
+            ) : null}
 
             {isResolved && sequence.result === "draw" ? (
                 <div className="battle-stage__aiko-overlay" aria-hidden="true">

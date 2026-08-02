@@ -45,6 +45,10 @@ export function useBattleSequence(
         );
     }, []);
 
+    const finish = useCallback(() => {
+        setSequence(null);
+    }, []);
+
     useEffect(() => {
         if (!sequence) {
             return;
@@ -80,6 +84,10 @@ export function useBattleSequence(
             return () => window.clearTimeout(timeoutId);
         }
 
+        if (sequence.result === "lose") {
+            return;
+        }
+
         const resolvedDuration =
             sequence.result === "draw"
                 ? durations.drawResolved
@@ -94,5 +102,6 @@ export function useBattleSequence(
         sequence,
         isPlaying: sequence !== null,
         start,
+        finish,
     };
 }

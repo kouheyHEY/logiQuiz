@@ -14,12 +14,15 @@ function Harness({
     onResolve: (value: BattlePayload) => void;
     payload?: BattlePayload;
 }) {
-    const { sequence, start } = useBattleSequence(onResolve);
+    const { sequence, start, finish } = useBattleSequence(onResolve);
 
     return (
         <>
             <button type="button" onClick={() => start(payload)}>
                 start
+            </button>
+            <button type="button" onClick={finish}>
+                finish
             </button>
             <span>{sequence?.phase ?? "idle"}</span>
         </>
@@ -80,6 +83,33 @@ describe("useBattleSequence", () => {
         act(() => {
             vi.advanceTimersByTime(1);
         });
+        expect(screen.getByText("idle")).toBeInTheDocument();
+
+        vi.useRealTimers();
+    });
+
+    it("敗北結果はリトライ操作まで維持する", () => {
+        vi.useFakeTimers();
+        const loseBattle: BattlePayload = {
+            playerHand: "グー",
+            opponentHand: "パー",
+            result: "lose",
+        };
+        render(<Harness onResolve={vi.fn()} payload={loseBattle} />);
+
+        fireEvent.click(screen.getByRole("button", { name: "start" }));
+        act(() => {
+            vi.advanceTimersByTime(420);
+        });
+        act(() => {
+            vi.advanceTimersByTime(620);
+        });
+        act(() => {
+            vi.advanceTimersByTime(5000);
+        });
+        expect(screen.getByText("resolved")).toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole("button", { name: "finish" }));
         expect(screen.getByText("idle")).toBeInTheDocument();
 
         vi.useRealTimers();

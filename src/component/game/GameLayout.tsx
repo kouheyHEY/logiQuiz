@@ -23,6 +23,7 @@ export type GameLayoutProps = {
     onCardSelect?: GameAreaProps["onCardSelect"];
     deck?: Deck;
     tutorialHand?: Hand;
+    onRetry?: () => void;
 };
 
 export default function GameLayout({
@@ -41,6 +42,7 @@ export default function GameLayout({
     onCardSelect,
     deck,
     tutorialHand,
+    onRetry,
 }: GameLayoutProps) {
     const headerProps: GameHeaderProps = {
         life,
@@ -66,7 +68,7 @@ export default function GameLayout({
                     </span>
                 </div>
             )}
-            <BattleStage sequence={battleSequence} />
+            <BattleStage sequence={battleSequence} onRetry={onRetry} />
             <GameArea
                 message={message}
                 isMessageVisible={isMessageVisible}

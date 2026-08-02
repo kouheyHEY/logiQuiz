@@ -36,7 +36,7 @@ export default function EnemyPanel({
                 </div>
                 {profile.isStrong ? (
                     <span className="enemy-panel__strong-tag">
-                        <ShieldAlert size={16} />
+                        <ShieldAlert size={12} />
                         強敵
                     </span>
                 ) : null}

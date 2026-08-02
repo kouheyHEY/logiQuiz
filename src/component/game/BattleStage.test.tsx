@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import BattleStage from "./BattleStage";
 
 describe("BattleStage", () => {
@@ -80,6 +80,41 @@ describe("BattleStage", () => {
 
         expect(
             container.querySelector(".battle-stage__aiko-overlay"),
+        ).not.toBeInTheDocument();
+    });
+
+    it("敗北時はバトルフィールド内にリトライボタンを表示する", () => {
+        const onRetry = vi.fn();
+        render(
+            <BattleStage
+                sequence={{
+                    playerHand: "グー",
+                    opponentHand: "パー",
+                    result: "lose",
+                    phase: "resolved",
+                }}
+                onRetry={onRetry}
+            />,
+        );
+
+        fireEvent.click(screen.getByRole("button", { name: "リトライ" }));
+        expect(onRetry).toHaveBeenCalledOnce();
+    });
+
+    it("ゲームオーバーなど再戦不可の場合はリトライを表示しない", () => {
+        render(
+            <BattleStage
+                sequence={{
+                    playerHand: "グー",
+                    opponentHand: "パー",
+                    result: "lose",
+                    phase: "resolved",
+                }}
+            />,
+        );
+
+        expect(
+            screen.queryByRole("button", { name: "リトライ" }),
         ).not.toBeInTheDocument();
     });
 });
