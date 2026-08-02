@@ -5,15 +5,12 @@ import EnemyPanel from "./EnemyPanel";
 import type { EnemyProfile } from "./enemyLogic";
 import type { GameAreaProps } from "./GameArea";
 import GameArea from "./GameArea";
-import type { Deck } from "./gameLogic";
+import { INITIAL_LIFE, type Deck } from "./gameLogic";
 
 export type GameLayoutProps = {
     life?: number;
     winStreak?: number;
     aikoCount?: number;
-    timeLeft?: number;
-    timerState?: GameHeaderProps["timerState"];
-    isTimerValid?: boolean;
     opponentNumber?: number;
     enemy?: EnemyProfile;
     enemyDeck?: Deck;
@@ -28,12 +25,9 @@ export type GameLayoutProps = {
 };
 
 export default function GameLayout({
-    life = 1,
+    life = INITIAL_LIFE,
     winStreak = 0,
     aikoCount = 0,
-    timeLeft = 0,
-    timerState = "paused",
-    isTimerValid = false,
     opponentNumber = 1,
     enemy,
     enemyDeck,
@@ -50,9 +44,6 @@ export default function GameLayout({
         life,
         winStreak,
         aikoCount,
-        timeLeft,
-        timerState,
-        isTimerValid,
     };
 
     return (

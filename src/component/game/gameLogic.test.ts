@@ -1,5 +1,7 @@
 import {
+    calculateRemainingLife,
     hands,
+    INITIAL_LIFE,
     initialDeck,
     judgeResult,
     mapNumberToHand,
@@ -7,6 +9,14 @@ import {
 } from "./gameLogic";
 
 describe("gameLogic", () => {
+    it("ライフ2で開始し、あいこで0.5・敗北で1減る", () => {
+        expect(INITIAL_LIFE).toBe(2);
+        expect(calculateRemainingLife(2, "draw")).toBe(1.5);
+        expect(calculateRemainingLife(2, "lose")).toBe(1);
+        expect(calculateRemainingLife(2, "win")).toBe(2);
+        expect(calculateRemainingLife(0.5, "lose")).toBe(0);
+    });
+
     it("maps numeric input to the correct hand choices in a loop", () => {
         const expected = [
             "グー",

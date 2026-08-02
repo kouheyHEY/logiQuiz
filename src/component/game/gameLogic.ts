@@ -30,6 +30,21 @@ export function mapNumberToHand(value: number): Hand {
 
 export type JudgeResult = "win" | "lose" | "draw";
 
+export const INITIAL_LIFE = 2;
+
+const lifeDamage: Record<JudgeResult, number> = {
+    win: 0,
+    draw: 0.5,
+    lose: 1,
+};
+
+export function calculateRemainingLife(
+    currentLife: number,
+    result: JudgeResult,
+): number {
+    return Math.max(0, currentLife - lifeDamage[result]);
+}
+
 const winsAgainst: Record<Hand, Hand> = {
     グー: "チョキ",
     チョキ: "パー",

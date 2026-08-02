@@ -5,14 +5,22 @@ import {
 } from "../hooks/useBattleSequence";
 import GameLayout from "./game/GameLayout";
 import type { Hand } from "./game/gameLogic";
-import { initialDeck, judgeResult } from "./game/gameLogic";
+import {
+    calculateRemainingLife,
+    INITIAL_LIFE,
+    initialDeck,
+    judgeResult,
+} from "./game/gameLogic";
 import {
     advanceEnemyTurn,
     createEnemyBattleState,
+    createEnemyLoopState,
+    getNextEnemyAfterVictory,
+    tutorialEnemy,
 } from "./game/enemyLogic";
 
 function GameView() {
-    const [life, setLife] = useState(1);
+    const [life, setLife] = useState(INITIAL_LIFE);
     const [winStreak, setWinStreak] = useState(0);
     const [aikoCount, setAikoCount] = useState(0);
     const [currentOpponent, setCurrentOpponent] = useState(1);
@@ -21,7 +29,10 @@ function GameView() {
     );
     const [gameOver, setGameOver] = useState(false);
     const [enemyState, setEnemyState] = useState(() =>
-        createEnemyBattleState(1),
+        createEnemyBattleState(tutorialEnemy),
+    );
+    const [enemyLoop, setEnemyLoop] = useState(() =>
+        createEnemyLoopState(),
     );
     const [strongEnemyWins, setStrongEnemyWins] = useState(0);
 
@@ -36,16 +47,25 @@ function GameView() {
 
         if (isStrongEnemyBattle) {
             if (result === "draw") {
+                const nextLife = calculateRemainingLife(life, result);
                 setAikoCount((prev) => prev + 1);
+                setLife(nextLife);
+                if (nextLife <= 0) {
+                    setGameOver(true);
+                    setMessage(
+                        `強敵の出した手は ${opponent}。あいこでライフを 0.5 失い、ゲームオーバーです。`,
+                    );
+                    return;
+                }
                 setEnemyState(nextEnemyState);
                 setMessage(
-                    `強敵の出した手は ${opponent}。あいこです。`,
+                    `強敵の出した手は ${opponent}。あいこでライフを 0.5 失いました。`,
                 );
                 return;
             }
 
             if (result === "lose") {
-                const nextLife = life - 1;
+                const nextLife = calculateRemainingLife(life, result);
                 setLife(nextLife);
                 if (nextLife <= 0) {
                     setGameOver(true);
@@ -54,7 +74,7 @@ function GameView() {
                     );
                     return;
                 }
-                setEnemyState(createEnemyBattleState(currentOpponent));
+                setEnemyState(createEnemyBattleState(enemyState.profile));
                 setMessage(
                     `強敵の出した手は ${opponent}。敗北しました。ライフを 1 失い、同じ相手との対戦を続行します。`,
                 );
@@ -65,8 +85,13 @@ function GameView() {
             setStrongEnemyWins(nextWins);
             if (nextWins >= (enemyState.profile.requiredWins ?? 1)) {
                 const nextOpponent = currentOpponent + 1;
+                const nextEncounter = getNextEnemyAfterVictory(
+                    enemyState.profile,
+                    enemyLoop,
+                );
                 setCurrentOpponent(nextOpponent);
-                setEnemyState(createEnemyBattleState(nextOpponent));
+                setEnemyState(createEnemyBattleState(nextEncounter.profile));
+                setEnemyLoop(nextEncounter.loop);
                 setStrongEnemyWins(0);
                 setWinStreak((prev) => prev + 1);
                 setMessage(
@@ -82,10 +107,19 @@ function GameView() {
         }
 
         if (result === "draw") {
+            const nextLife = calculateRemainingLife(life, result);
             setAikoCount((prev) => prev + 1);
+            setLife(nextLife);
+            if (nextLife <= 0) {
+                setGameOver(true);
+                setMessage(
+                    `相手の出した手は ${opponent}。あいこでライフを 0.5 失い、ゲームオーバーです。`,
+                );
+                return;
+            }
             setEnemyState(nextEnemyState);
             setMessage(
-                `相手の出した手は ${opponent}。あいこです。`,
+                `相手の出した手は ${opponent}。あいこでライフを 0.5 失いました。`,
             );
             return;
         }
@@ -93,8 +127,13 @@ function GameView() {
         if (result === "win") {
             setWinStreak((prev) => prev + 1);
             const nextOpponent = currentOpponent + 1;
+            const nextEncounter = getNextEnemyAfterVictory(
+                enemyState.profile,
+                enemyLoop,
+            );
             setCurrentOpponent(nextOpponent);
-            setEnemyState(createEnemyBattleState(nextOpponent));
+            setEnemyState(createEnemyBattleState(nextEncounter.profile));
+            setEnemyLoop(nextEncounter.loop);
             setStrongEnemyWins(0);
             setMessage(
                 `相手の出した手は ${opponent}。勝利しました！次の対戦へ進みます。`,
@@ -102,7 +141,7 @@ function GameView() {
             return;
         }
 
-        const nextLife = life - 1;
+        const nextLife = calculateRemainingLife(life, result);
         setLife(nextLife);
         if (nextLife <= 0) {
             setGameOver(true);
@@ -112,7 +151,7 @@ function GameView() {
             return;
         }
         setWinStreak(0);
-        setEnemyState(createEnemyBattleState(currentOpponent));
+        setEnemyState(createEnemyBattleState(enemyState.profile));
         setMessage(
             `相手の出した手は ${opponent}。敗北しました。同じ相手との対戦を続行します。`,
         );
@@ -147,9 +186,6 @@ function GameView() {
                 life={life}
                 winStreak={winStreak}
                 aikoCount={aikoCount}
-                timeLeft={0}
-                timerState="paused"
-                isTimerValid={false}
                 opponentNumber={currentOpponent}
                 enemy={enemyState.profile}
                 enemyDeck={enemyState.deck}

@@ -1,7 +1,8 @@
 /**
  * 引数の型
  */
-import { Heart, Trophy, Clock2, Equal } from "lucide-react";
+import { Heart, Trophy, Equal } from "lucide-react";
+import { INITIAL_LIFE } from "./game/gameLogic";
 
 export type GameHeaderProps = {
     /** ライフ */
@@ -10,12 +11,6 @@ export type GameHeaderProps = {
     winStreak: number;
     /** あいこの累計数 */
     aikoCount: number;
-    /** 残り時間 */
-    timeLeft: number;
-    /** タイマーの状態 */
-    timerState: "running" | "paused" | "finished";
-    /** タイマー有効状態 */
-    isTimerValid: boolean;
 };
 
 /**
@@ -24,18 +19,46 @@ export type GameHeaderProps = {
  * @returns ヘッダ
  */
 export default function GameHeader({
-    life = 1,
+    life = INITIAL_LIFE,
     winStreak,
     aikoCount,
-    timeLeft,
-    isTimerValid,
 }: GameHeaderProps) {
     return (
         <div className="game-header">
             <div className="game-header__content">
                 <div className="game-header__row">
-                    <Heart size={20} />
-                    <h2>ライフ: {life}</h2>
+                    <h2>ライフ</h2>
+                    <div
+                        className="game-header__hearts"
+                        role="img"
+                        aria-label={`ライフ: ${life}`}
+                    >
+                        {Array.from({ length: INITIAL_LIFE }, (_, index) => {
+                            const fillPercent = Math.max(
+                                0,
+                                Math.min(100, (life - index) * 100),
+                            );
+
+                            return (
+                                <span
+                                    className="game-header__heart"
+                                    key={index}
+                                    aria-hidden="true"
+                                >
+                                    <Heart className="game-header__heart-outline" />
+                                    {fillPercent > 0 ? (
+                                        <Heart
+                                            className="game-header__heart-fill"
+                                            fill="currentColor"
+                                            style={{
+                                                clipPath: `inset(0 ${100 - fillPercent}% 0 0)`,
+                                            }}
+                                        />
+                                    ) : null}
+                                </span>
+                            );
+                        })}
+                    </div>
                 </div>
                 <div className="game-header__row">
                     <Trophy size={20} />
@@ -44,10 +67,6 @@ export default function GameHeader({
                 <div className="game-header__row game-header__row--aiko">
                     <Equal size={20} />
                     <h2>AIKO: {aikoCount}</h2>
-                </div>
-                <div className="game-header__row">
-                    <Clock2 size={20} />
-                    <h2>残り時間: {isTimerValid ? timeLeft : "∞"}</h2>
                 </div>
             </div>
         </div>

@@ -20,6 +20,20 @@ export type EnemyBattleState = {
     line: string;
 };
 
+export type EnemyLoopState = {
+    normalWins: number;
+    normalWinsRequired: number;
+};
+
+export const tutorialEnemy: EnemyProfile = {
+    id: "tutorial-rock",
+    name: "グーだけの練習相手",
+    trait: "最初の操作を教える練習相手。グーだけを出す。",
+    deck: { グー: Infinity, チョキ: 0, パー: 0 },
+    favoredHand: "グー",
+    line: "グーを出すぞ。パーなら勝てる！",
+};
+
 export const normalEnemies: EnemyProfile[] = [
     {
         id: "rock-man",
@@ -78,14 +92,57 @@ function cloneDeck(deck: Deck): Deck {
     return { ...deck };
 }
 
-export function getEnemyForOpponent(opponentNumber: number): EnemyProfile {
-    if (opponentNumber > 0 && opponentNumber % 10 === 0) {
-        const bossIndex =
-            (Math.floor(opponentNumber / 10) - 1) % strongEnemies.length;
-        return strongEnemies[bossIndex];
+function selectRandomProfile(
+    profiles: EnemyProfile[],
+    random: () => number,
+): EnemyProfile {
+    const index = Math.min(
+        profiles.length - 1,
+        Math.floor(random() * profiles.length),
+    );
+    return profiles[index];
+}
+
+export function createEnemyLoopState(
+    random: () => number = Math.random,
+): EnemyLoopState {
+    return {
+        normalWins: 0,
+        normalWinsRequired: 3 + Math.floor(random() * 3),
+    };
+}
+
+export function getNextEnemyAfterVictory(
+    currentEnemy: EnemyProfile,
+    loop: EnemyLoopState,
+    random: () => number = Math.random,
+): { profile: EnemyProfile; loop: EnemyLoopState } {
+    if (currentEnemy.id === tutorialEnemy.id) {
+        return {
+            profile: selectRandomProfile(normalEnemies, random),
+            loop,
+        };
     }
 
-    return normalEnemies[(opponentNumber - 1) % normalEnemies.length];
+    if (currentEnemy.isStrong) {
+        return {
+            profile: selectRandomProfile(normalEnemies, random),
+            loop: createEnemyLoopState(random),
+        };
+    }
+
+    const normalWins = loop.normalWins + 1;
+    if (normalWins >= loop.normalWinsRequired) {
+        return {
+            profile: selectRandomProfile(strongEnemies, random),
+            loop: { ...loop, normalWins: 0 },
+        };
+    }
+
+    return {
+        profile: selectRandomProfile(normalEnemies, random),
+        loop: { ...loop, normalWins },
+    };
 }
 
 export function selectEnemyHand(
@@ -134,10 +191,9 @@ export function createEnemyLine(
 }
 
 export function createEnemyBattleState(
-    opponentNumber: number,
+    profile: EnemyProfile,
     random: () => number = Math.random,
 ): EnemyBattleState {
-    const profile = getEnemyForOpponent(opponentNumber);
     const deck = cloneDeck(profile.deck);
     const plannedHand = selectEnemyHand(profile, deck, random);
 

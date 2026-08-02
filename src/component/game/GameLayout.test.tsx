@@ -16,7 +16,7 @@ describe("GameLayout", () => {
     // テスト 1: GameHeader が描画されている（"連勝数" テキストの存在確認）
     // -----------------------------------------------------------------------
     it("「連勝数」テキストが表示される（GameHeader が描画されている）", () => {
-        render(<GameLayout winStreak={3} timeLeft={30} isTimerValid={true} />);
+        render(<GameLayout winStreak={3} />);
         // GameHeader は「連勝数」ラベルを持つ
         expect(screen.getByText(/連勝数/)).toBeInTheDocument();
     });
@@ -40,8 +40,6 @@ describe("GameLayout", () => {
         render(
             <GameLayout
                 winStreak={1}
-                timeLeft={10}
-                isTimerValid={true}
                 message="テストメッセージ"
             />,
         );
@@ -60,14 +58,14 @@ describe("GameLayout", () => {
 
     // -----------------------------------------------------------------------
     // テスト 4: props 未指定時にフォールバック値でクラッシュせずに描画される
-    //           winStreak=0, isTimerValid=false → "∞" が表示される
+    //           winStreak=0、初期ライフ2で表示される
     // -----------------------------------------------------------------------
-    it('props 未指定時にフォールバック値でクラッシュせず描画される（winStreak=0, isTimerValid=false → "∞"）', () => {
+    it("props 未指定時にフォールバック値でクラッシュせず描画される", () => {
         // props を一切渡さない
         expect(() => render(<GameLayout />)).not.toThrow();
 
-        // isTimerValid=false のフォールバックにより "∞" が表示される
-        expect(screen.getByText(/∞/)).toBeInTheDocument();
+        expect(screen.getByLabelText("ライフ: 2")).toBeInTheDocument();
+        expect(screen.queryByText(/残り時間/)).not.toBeInTheDocument();
 
         // winStreak=0 のフォールバックにより 0 が表示される
         expect(screen.getByText(/連勝数/)).toBeInTheDocument();
