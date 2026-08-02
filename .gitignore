@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+dist-itch
 dist-ssr
 *.local
 design-qa.md
