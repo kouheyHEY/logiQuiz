@@ -1,4 +1,4 @@
-import { ShieldAlert } from "lucide-react";
+import { Heart, ShieldAlert } from "lucide-react";
 import { useTypewriterText } from "../../hooks/useTypewriterText";
 import type { Deck } from "./gameLogic";
 import type { EnemyProfile } from "./enemyLogic";
@@ -20,10 +20,8 @@ export default function EnemyPanel({
     currentWins = 0,
 }: EnemyPanelProps) {
     const { displayedText, isComplete } = useTypewriterText(line);
-    const remainingWins = Math.max(
-        0,
-        (profile.requiredWins ?? 1) - currentWins,
-    );
+    const maxLife = profile.requiredWins ?? 1;
+    const remainingLife = Math.max(0, maxLife - currentWins);
 
     return (
         <section className="enemy-panel" aria-label={`対戦相手 ${profile.name}`}>
@@ -57,11 +55,30 @@ export default function EnemyPanel({
 
             <div className="enemy-panel__cards">
                 <CardPad deck={deck} orientation="opponent" />
-                {profile.isStrong ? (
-                    <span className="enemy-panel__wins">
-                        撃破まであと {remainingWins} 勝
+                <div
+                    className="enemy-panel__life"
+                    role="img"
+                    aria-label={`敵ライフ: ${remainingLife} / ${maxLife}`}
+                >
+                    <span className="enemy-panel__life-label" aria-hidden="true">
+                        ENEMY LIFE
                     </span>
-                ) : null}
+                    <span className="enemy-panel__life-hearts" aria-hidden="true">
+                        {Array.from({ length: maxLife }, (_, index) => {
+                            const isActive = index < remainingLife;
+
+                            return (
+                                <Heart
+                                    className={`enemy-panel__life-heart ${isActive ? "is-active" : "is-empty"}`}
+                                    fill={isActive ? "currentColor" : "none"}
+                                    key={index}
+                                    size={15}
+                                    strokeWidth={2.2}
+                                />
+                            );
+                        })}
+                    </span>
+                </div>
             </div>
         </section>
     );

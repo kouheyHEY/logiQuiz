@@ -169,7 +169,7 @@ function GameView() {
         isPlaying: isBattlePlaying,
         start: startBattle,
         finish: finishBattle,
-    } = useBattleSequence(resolveBattle);
+    } = useBattleSequence(resolveBattle, { holdResolved: gameOver });
 
     const handleRetry = () => {
         finishBattle();

@@ -68,7 +68,11 @@ export default function GameLayout({
                     </span>
                 </div>
             )}
-            <BattleStage sequence={battleSequence} onRetry={onRetry} />
+            <BattleStage
+                sequence={battleSequence}
+                isGameOver={isGameOver}
+                onRetry={onRetry}
+            />
             <GameArea
                 message={message}
                 isMessageVisible={isMessageVisible}

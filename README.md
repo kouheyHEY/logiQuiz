@@ -13,6 +13,8 @@ npm run dev
 
 `.github/workflows/deploy-pages.yml`により、`main`ブランチへpushすると自動的にビルド・公開されます。
 
+結果演出の比較モックは、公開URLへ `?view=animation-mock` を付けると開けます。勝利・敗北・AIKOを個別に切り替え、再生できます。
+
 1. このフォルダーをGitHubリポジトリとして作成し、既定ブランチを`main`にする。
 2. GitHubのリポジトリ設定で、PagesのSourceに「GitHub Actions」を選ぶ。
 3. `main`へpushする。

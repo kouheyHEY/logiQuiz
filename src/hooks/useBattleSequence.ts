@@ -31,6 +31,7 @@ const reducedMotionDurations = {
 
 export function useBattleSequence(
     onResolve: (battle: BattlePayload) => void,
+    { holdResolved = false }: { holdResolved?: boolean } = {},
 ) {
     const [sequence, setSequence] = useState<BattleSequence | null>(null);
     const onResolveRef = useRef(onResolve);
@@ -84,7 +85,7 @@ export function useBattleSequence(
             return () => window.clearTimeout(timeoutId);
         }
 
-        if (sequence.result === "lose") {
+        if (sequence.result === "lose" || holdResolved) {
             return;
         }
 
@@ -96,7 +97,7 @@ export function useBattleSequence(
             setSequence(null);
         }, resolvedDuration);
         return () => window.clearTimeout(timeoutId);
-    }, [sequence]);
+    }, [holdResolved, sequence]);
 
     return {
         sequence,

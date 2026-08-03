@@ -101,6 +101,43 @@ describe("BattleStage", () => {
         expect(onRetry).toHaveBeenCalledOnce();
     });
 
+    it("あいこでゲームオーバーになった場合もリトライを表示する", () => {
+        const onRetry = vi.fn();
+        render(
+            <BattleStage
+                sequence={{
+                    playerHand: "グー",
+                    opponentHand: "グー",
+                    result: "draw",
+                    phase: "resolved",
+                }}
+                isGameOver
+                onRetry={onRetry}
+            />,
+        );
+
+        fireEvent.click(screen.getByRole("button", { name: "リトライ" }));
+        expect(onRetry).toHaveBeenCalledOnce();
+    });
+
+    it("ライフが残る通常のあいこではリトライを表示しない", () => {
+        render(
+            <BattleStage
+                sequence={{
+                    playerHand: "グー",
+                    opponentHand: "グー",
+                    result: "draw",
+                    phase: "resolved",
+                }}
+                onRetry={vi.fn()}
+            />,
+        );
+
+        expect(
+            screen.queryByRole("button", { name: "リトライ" }),
+        ).not.toBeInTheDocument();
+    });
+
     it("ゲームオーバーなど再戦不可の場合はリトライを表示しない", () => {
         render(
             <BattleStage

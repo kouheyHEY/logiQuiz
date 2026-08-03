@@ -270,18 +270,49 @@ button:disabled {
 
 .enemy-panel__cards {
     display: grid;
+    grid-template-rows: auto 1.15rem;
     justify-items: center;
-    gap: 0.25rem;
+    gap: 0.18rem;
 }
 
 .enemy-panel__cards .card-pad {
     padding: 0;
 }
 
-.enemy-panel__wins {
-    color: var(--surface-text);
-    font-size: 0.8rem;
-    font-weight: 700;
+.enemy-panel__life {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.32rem;
+    min-height: 1.15rem;
+    color: #0369a1;
+}
+
+.enemy-panel__life-label {
+    font-size: 0.58rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    line-height: 1;
+}
+
+.enemy-panel__life-hearts {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.1rem;
+    min-width: 2rem;
+}
+
+.enemy-panel__life-heart {
+    display: block;
+    flex: 0 0 auto;
+    color: #0284c7;
+    filter: drop-shadow(0 2px 3px rgba(2, 132, 199, 0.24));
+}
+
+.enemy-panel__life-heart.is-empty {
+    color: #94a3b8;
+    opacity: 0.62;
+    filter: none;
 }
 
 .game-header__badge {
@@ -786,6 +817,309 @@ button:disabled {
     transform: translateY(-2px);
     border-color: var(--accent-border);
     box-shadow: 0 18px 36px rgba(0, 0, 0, 0.08);
+}
+
+/* Result animation comparison mock */
+
+.animation-mock {
+    min-height: 100svh;
+}
+
+.animation-mock__controls {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 48px;
+    padding: 0.35rem 0.55rem;
+    border-bottom: 1px solid rgba(216, 180, 254, 0.38);
+    background: rgba(22, 23, 29, 0.96);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.animation-mock__title {
+    color: #f3e8ff;
+    font-size: 0.72rem;
+    font-weight: 850;
+    white-space: nowrap;
+}
+
+.animation-mock__tabs {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.animation-mock__controls button {
+    min-height: 34px;
+    padding: 0.32rem 0.58rem;
+    border-color: rgba(216, 180, 254, 0.34);
+    border-radius: 999px;
+    background: #26202f;
+    color: #f3e8ff;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.animation-mock__controls button.is-active {
+    border-color: #c084fc;
+    background: #6b21a8;
+    color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.2);
+}
+
+.animation-mock__replay {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.animation-mock__viewport {
+    position: relative;
+    isolation: isolate;
+}
+
+.animation-mock__event-layer {
+    position: fixed;
+    inset: 48px 0 0;
+    z-index: 120;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.animation-mock__event-layer span {
+    font-family: var(--heading);
+    font-weight: 1000;
+    line-height: 0.9;
+    paint-order: stroke fill;
+}
+
+.animation-mock--win .animation-mock__event-layer {
+    background: rgba(6, 78, 59, 0.12);
+    animation: mock-event-layer 2.4s ease-in-out both;
+}
+
+.animation-mock--win .animation-mock__event-layer span {
+    color: #f0fdf4;
+    font-size: clamp(4.6rem, 21vw, 10rem);
+    letter-spacing: 0.04em;
+    -webkit-text-stroke: clamp(4px, 0.75vw, 8px) #166534;
+    text-shadow: 0 8px 0 #052e16, 0 18px 40px rgba(5, 46, 22, 0.7);
+    animation: mock-win-stamp 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animation-mock--win .battle-card--player {
+    animation: mock-winning-card 1.45s 0.72s ease-in-out both;
+}
+
+.animation-mock--win .battle-card--opponent {
+    animation: mock-losing-card-dim 1.45s 0.72s ease-in-out both;
+}
+
+.animation-mock--lose .animation-mock__event-layer {
+    align-items: center;
+    animation: mock-event-layer 2.35s ease-in-out both;
+}
+
+.animation-mock--lose .animation-mock__event-layer span {
+    padding: 0.55rem 1.3rem;
+    border: 3px solid #e9d5ff;
+    border-radius: 10px;
+    background: #2e1065;
+    color: #ffffff;
+    font-size: clamp(2.1rem, 11vw, 4.2rem);
+    letter-spacing: 0.12em;
+    box-shadow: 0 0 0 5px rgba(88, 28, 135, 0.48), 0 16px 36px rgba(15, 23, 42, 0.58);
+    animation: mock-lose-label 2.35s cubic-bezier(0.2, 0.85, 0.2, 1) both;
+}
+
+.animation-mock--lose .battle-card--opponent {
+    animation: mock-opponent-strike 2.1s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+}
+
+.animation-mock--lose .battle-card--player {
+    animation: mock-player-recoil 2.1s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+}
+
+.animation-mock--lose .game-header__heart-fill:last-child {
+    animation: mock-heart-hit 1.7s ease-in-out both;
+}
+
+.animation-mock--draw .animation-mock__event-layer {
+    background: rgba(46, 16, 101, 0.08);
+    animation: mock-event-layer 2.8s ease-in-out both;
+}
+
+.animation-mock--draw .battle-stage__aiko-overlay {
+    display: none;
+}
+
+.animation-mock--draw .animation-mock__event-layer::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 3px;
+    background: #67e8f9;
+    box-shadow: 0 0 18px #8b5cf6, 0 0 34px rgba(103, 232, 249, 0.72);
+    animation: mock-scanline 2.8s ease-in-out both;
+}
+
+.animation-mock--draw .animation-mock__event-layer span {
+    color: #312e81;
+    font-size: clamp(3.4rem, 16vw, 7rem);
+    font-style: italic;
+    letter-spacing: 0.08em;
+    -webkit-text-stroke: clamp(3px, 0.55vw, 6px) #ffffff;
+    text-shadow: 0 0 8px #67e8f9, 0 0 24px #8b5cf6;
+    animation: mock-aiko-hud 2.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animation-mock--draw .game-header__row--aiko,
+.animation-mock--draw .game-header__hearts {
+    animation: mock-hud-pulse 1.6s 0.55s ease-in-out both;
+}
+
+.animation-mock--draw .battle-card {
+    animation: mock-draw-card-pulse 2.1s ease-in-out both;
+}
+
+.animation-mock__hud-feedback {
+    position: fixed;
+    inset: 48px 0 auto;
+    z-index: 130;
+    width: min(100%, 780px);
+    height: 72px;
+    margin: auto;
+    pointer-events: none;
+}
+
+.animation-mock__hud-feedback span {
+    position: absolute;
+    top: 0.75rem;
+    font-weight: 950;
+    text-shadow: 0 2px 10px rgba(15, 23, 42, 0.7);
+    animation: mock-counter-float 2.1s 0.45s ease-out both;
+}
+
+.animation-mock__aiko-change {
+    left: 68%;
+    color: #f0abfc;
+}
+
+.animation-mock__life-change {
+    left: 13%;
+    color: #fb7185;
+}
+
+@keyframes mock-event-layer {
+    0%, 8% { opacity: 0; }
+    22%, 72% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes mock-win-stamp {
+    0% { opacity: 0; transform: scale(2.4) rotate(-7deg); }
+    32%, 70% { opacity: 1; transform: scale(1) rotate(0); }
+    100% { opacity: 0; transform: scale(0.92); }
+}
+
+@keyframes mock-winning-card {
+    0%, 100% { transform: translateY(0) scale(1); filter: none; }
+    35%, 70% { transform: translateY(-8px) scale(1.06); filter: drop-shadow(0 0 12px #22c55e); }
+}
+
+@keyframes mock-losing-card-dim {
+    0% { opacity: 1; transform: scale(1); }
+    40%, 100% { opacity: 0.45; transform: scale(0.96); }
+}
+
+@keyframes mock-lose-label {
+    0%, 28% { opacity: 0; transform: translateY(18px) scale(0.8); }
+    42%, 72% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-10px) scale(0.96); }
+}
+
+@keyframes mock-opponent-strike {
+    0%, 16% { transform: translateX(0) scale(1); filter: none; }
+    36%, 64% { transform: translateX(-16px) scale(1.08); filter: drop-shadow(12px 0 10px rgba(249, 115, 22, 0.55)); }
+    100% { transform: translateX(0) scale(1); filter: none; }
+}
+
+@keyframes mock-player-recoil {
+    0%, 16% { transform: translate(0, 0) rotate(0); opacity: 1; }
+    34% { transform: translate(-8px, 12px) rotate(-5deg); opacity: 0.72; }
+    42% { transform: translate(5px, 9px) rotate(3deg); }
+    52%, 100% { transform: translate(0, 8px) rotate(0); opacity: 0.58; }
+}
+
+@keyframes mock-heart-hit {
+    0%, 18% { opacity: 1; transform: scale(1); }
+    28% { transform: scale(1.3) rotate(-8deg); }
+    48%, 100% { opacity: 0; transform: scale(0.45) translateY(8px); }
+}
+
+@keyframes mock-scanline {
+    0% { opacity: 0; transform: translateY(-90px) scaleX(0.3); }
+    35%, 62% { opacity: 1; transform: translateY(0) scaleX(1); }
+    100% { opacity: 0; transform: translateY(90px) scaleX(0.45); }
+}
+
+@keyframes mock-aiko-hud {
+    0%, 18% { opacity: 0; transform: scale(1.8); }
+    38%, 72% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.9); }
+}
+
+@keyframes mock-hud-pulse {
+    0%, 100% { transform: scale(1); filter: none; }
+    44%, 70% { transform: scale(1.12); filter: drop-shadow(0 0 8px #c084fc); }
+}
+
+@keyframes mock-draw-card-pulse {
+    0%, 100% { filter: none; }
+    42%, 68% { filter: drop-shadow(0 0 10px #67e8f9); }
+}
+
+@keyframes mock-counter-float {
+    0%, 20% { opacity: 0; transform: translateY(12px) scale(0.8); }
+    42%, 68% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-18px) scale(0.92); }
+}
+
+@media (max-width: 520px) {
+    .animation-mock__title {
+        display: none;
+    }
+
+    .animation-mock__controls {
+        gap: 0.25rem;
+        padding-inline: 0.3rem;
+    }
+
+    .animation-mock__controls button {
+        padding-inline: 0.48rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animation-mock__event-layer,
+    .animation-mock__event-layer::before,
+    .animation-mock__event-layer span,
+    .animation-mock .battle-card,
+    .animation-mock .game-header__row,
+    .animation-mock .game-header__hearts,
+    .animation-mock__hud-feedback span {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+    }
 }
 
 .card-button:active:not(:disabled) {

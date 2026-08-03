@@ -14,6 +14,7 @@ dist-ssr
 *.local
 design-qa.md
 design-qa-*.png
+design-qa-*.jpg
 
 # Editor directories and files
 .vscode/*

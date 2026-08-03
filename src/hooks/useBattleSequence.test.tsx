@@ -10,11 +10,15 @@ const battle: BattlePayload = {
 function Harness({
     onResolve,
     payload = battle,
+    holdResolved = false,
 }: {
     onResolve: (value: BattlePayload) => void;
     payload?: BattlePayload;
+    holdResolved?: boolean;
 }) {
-    const { sequence, start, finish } = useBattleSequence(onResolve);
+    const { sequence, start, finish } = useBattleSequence(onResolve, {
+        holdResolved,
+    });
 
     return (
         <>
@@ -107,6 +111,40 @@ describe("useBattleSequence", () => {
         act(() => {
             vi.advanceTimersByTime(5000);
         });
+        expect(screen.getByText("resolved")).toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole("button", { name: "finish" }));
+        expect(screen.getByText("idle")).toBeInTheDocument();
+
+        vi.useRealTimers();
+    });
+
+    it("ゲームオーバー時はあいこの結果もリトライ操作まで維持する", () => {
+        vi.useFakeTimers();
+        const drawBattle: BattlePayload = {
+            playerHand: "グー",
+            opponentHand: "グー",
+            result: "draw",
+        };
+        render(
+            <Harness
+                onResolve={vi.fn()}
+                payload={drawBattle}
+                holdResolved
+            />,
+        );
+
+        fireEvent.click(screen.getByRole("button", { name: "start" }));
+        act(() => {
+            vi.advanceTimersByTime(420);
+        });
+        act(() => {
+            vi.advanceTimersByTime(620);
+        });
+        act(() => {
+            vi.advanceTimersByTime(5000);
+        });
+
         expect(screen.getByText("resolved")).toBeInTheDocument();
 
         fireEvent.click(screen.getByRole("button", { name: "finish" }));

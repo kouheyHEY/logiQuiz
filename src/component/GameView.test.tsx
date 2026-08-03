@@ -59,6 +59,34 @@ describe("GameView", () => {
         ).toBeEnabled();
     });
 
+    it("あいこでゲームオーバーになってもリトライできる", () => {
+        render(<GameView />);
+
+        // 最初の練習相手は必ずグーなので、グーを4回出してライフを0にする。
+        for (let count = 0; count < 4; count += 1) {
+            fireEvent.click(
+                screen.getByRole("button", { name: "グー、使用可能" }),
+            );
+            resolveCurrentBattle();
+        }
+
+        expect(screen.getByLabelText("ライフ: 0")).toBeInTheDocument();
+        expect(screen.getByText("あいこ")).toBeInTheDocument();
+        expect(
+            screen.getByRole("button", { name: "リトライ" }),
+        ).toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole("button", { name: "リトライ" }));
+
+        expect(screen.getByLabelText("ライフ: 2")).toBeInTheDocument();
+        expect(
+            screen.queryByRole("button", { name: "リトライ" }),
+        ).not.toBeInTheDocument();
+        expect(
+            screen.getByRole("button", { name: "グー、使用可能" }),
+        ).toBeEnabled();
+    });
+
     it("リトライすると相手と強敵までの進行を最初から作り直す", () => {
         vi.spyOn(Math, "random").mockReturnValue(0);
         const { container } = render(<GameView />);

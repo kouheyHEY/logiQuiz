@@ -5,6 +5,7 @@ import type { Hand as HandType } from "./gameLogic";
 
 export type BattleStageProps = {
     sequence: BattleSequence | null;
+    isGameOver?: boolean;
     onRetry?: () => void;
 };
 
@@ -38,7 +39,11 @@ function Face({
     );
 }
 
-export default function BattleStage({ sequence, onRetry }: BattleStageProps) {
+export default function BattleStage({
+    sequence,
+    isGameOver = false,
+    onRetry,
+}: BattleStageProps) {
     if (!sequence) {
         return (
             <section
@@ -95,7 +100,9 @@ export default function BattleStage({ sequence, onRetry }: BattleStageProps) {
                       : "カードを出す…"}
             </div>
 
-            {isResolved && sequence.result === "lose" && onRetry ? (
+            {isResolved &&
+            (sequence.result === "lose" || isGameOver) &&
+            onRetry ? (
                 <button
                     type="button"
                     className="battle-stage__retry"
