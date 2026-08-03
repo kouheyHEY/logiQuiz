@@ -5,7 +5,12 @@ import EnemyPanel from "./EnemyPanel";
 import type { EnemyProfile } from "./enemyLogic";
 import type { GameAreaProps } from "./GameArea";
 import GameArea from "./GameArea";
-import { INITIAL_LIFE, type Deck, type Hand } from "./gameLogic";
+import {
+    INITIAL_LIFE,
+    type Deck,
+    type PlayerDeck,
+    type Hand,
+} from "./gameLogic";
 
 export type GameLayoutProps = {
     life?: number;
@@ -21,7 +26,7 @@ export type GameLayoutProps = {
     isMessageVisible?: boolean;
     isGameOver?: boolean;
     onCardSelect?: GameAreaProps["onCardSelect"];
-    deck?: Deck;
+    deck?: PlayerDeck;
     tutorialHand?: Hand;
     onRetry?: () => void;
 };

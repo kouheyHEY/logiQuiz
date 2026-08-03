@@ -1,13 +1,16 @@
 export type Hand = "グー" | "チョキ" | "パー";
+export type PlayerHand = Hand | "グチョパ";
 
 export const hands: Hand[] = ["グー", "チョキ", "パー"];
 
 export type Deck = Record<Hand, number>;
+export type PlayerDeck = Deck & Record<"グチョパ", number>;
 
-export const initialDeck: Deck = {
+export const initialDeck: PlayerDeck = {
     グー: Number.POSITIVE_INFINITY,
     チョキ: Number.POSITIVE_INFINITY,
     パー: Number.POSITIVE_INFINITY,
+    グチョパ: 0,
 };
 
 export function normalizeDeck(deck: Deck): Deck {
@@ -45,13 +48,20 @@ export function calculateRemainingLife(
     return Math.max(0, currentLife - lifeDamage[result]);
 }
 
+export function calculateLifeAfterWin(currentLife: number): number {
+    return currentLife + 0.25;
+}
+
 const winsAgainst: Record<Hand, Hand> = {
     グー: "チョキ",
     チョキ: "パー",
     パー: "グー",
 };
 
-export function judgeResult(player: Hand, opponent: Hand): JudgeResult {
+export function judgeResult(player: PlayerHand, opponent: Hand): JudgeResult {
+    if (player === "グチョパ") {
+        return "win";
+    }
     if (player === opponent) {
         return "draw";
     }

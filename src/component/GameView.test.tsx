@@ -123,4 +123,48 @@ describe("GameView", () => {
         expect(screen.getByText("強敵")).toBeInTheDocument();
         expectOpponent(4);
     });
+
+    it("勝利ごとにライフが0.25増え、強敵撃破で右端にグチョパを得る", () => {
+        vi.spyOn(Math, "random").mockReturnValue(0);
+        render(<GameView />);
+
+        const winWithPaper = () => {
+            fireEvent.click(
+                screen.getByRole("button", { name: "パー、使用可能" }),
+            );
+            resolveCurrentBattle();
+        };
+
+        // チュートリアル1勝、通常敵3勝、強敵へ2勝。
+        for (let count = 0; count < 6; count += 1) {
+            winWithPaper();
+        }
+
+        expect(screen.getByLabelText("ライフ: 3.5")).toBeInTheDocument();
+        expect(
+            screen.getAllByText(/無敵の手「グチョパ」を手に入れました/),
+        ).not.toHaveLength(0);
+
+        const buttons = screen.getAllByRole("button");
+        expect(buttons[buttons.length - 1]).toHaveAccessibleName(
+            "グチョパ、使用可能",
+        );
+
+        fireEvent.click(
+            screen.getByRole("button", { name: "グチョパ、使用可能" }),
+        );
+        resolveCurrentBattle();
+
+        expect(screen.getByLabelText("ライフ: 3.75")).toBeInTheDocument();
+
+        fireEvent.click(
+            screen.getByRole("button", { name: "チョキ、使用可能" }),
+        );
+        resolveCurrentBattle();
+        fireEvent.click(screen.getByRole("button", { name: "リトライ" }));
+
+        expect(
+            screen.queryByRole("button", { name: "グチョパ、使用可能" }),
+        ).not.toBeInTheDocument();
+    });
 });

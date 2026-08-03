@@ -4,8 +4,9 @@ import {
     type BattlePayload,
 } from "../hooks/useBattleSequence";
 import GameLayout from "./game/GameLayout";
-import type { Hand } from "./game/gameLogic";
+import type { PlayerHand } from "./game/gameLogic";
 import {
+    calculateLifeAfterWin,
     calculateRemainingLife,
     INITIAL_LIFE,
     initialDeck,
@@ -39,6 +40,7 @@ function GameView() {
         createEnemyLoopState(),
     );
     const [strongEnemyWins, setStrongEnemyWins] = useState(0);
+    const [hasGuchopa, setHasGuchopa] = useState(false);
     const [showCardTutorial, setShowCardTutorial] = useState(
         () => !hasCompletedTutorial(),
     );
@@ -89,6 +91,7 @@ function GameView() {
             }
 
             const nextWins = strongEnemyWins + 1;
+            setLife((prev) => calculateLifeAfterWin(prev));
             setStrongEnemyWins(nextWins);
             if (nextWins >= (enemyState.profile.requiredWins ?? 1)) {
                 const nextOpponent = currentOpponent + 1;
@@ -101,8 +104,9 @@ function GameView() {
                 setEnemyLoop(nextEncounter.loop);
                 setStrongEnemyWins(0);
                 setWinStreak((prev) => prev + 1);
+                setHasGuchopa(true);
                 setMessage(
-                    `強敵を撃破しました！次の対戦へ進みます。`,
+                    `強敵を撃破しました！無敵の手「グチョパ」を手に入れました。`,
                 );
                 return;
             }
@@ -132,6 +136,7 @@ function GameView() {
         }
 
         if (result === "win") {
+            setLife((prev) => calculateLifeAfterWin(prev));
             setWinStreak((prev) => prev + 1);
             const nextOpponent = currentOpponent + 1;
             const nextEncounter = getNextEnemyAfterVictory(
@@ -188,6 +193,7 @@ function GameView() {
         setEnemyState(createEnemyBattleState(retryProfile));
         setStrongEnemyWins(0);
         setWinStreak(0);
+        setHasGuchopa(false);
 
         if (gameOver) {
             setLife(INITIAL_LIFE);
@@ -203,7 +209,7 @@ function GameView() {
         );
     };
 
-    const handleCardSelect = (chosen: Hand) => {
+    const handleCardSelect = (chosen: PlayerHand) => {
         if (
             gameOver ||
             isBattlePlaying
@@ -239,7 +245,10 @@ function GameView() {
                 message={message}
                 isMessageVisible
                 isGameOver={gameOver}
-                deck={initialDeck}
+                deck={{
+                    ...initialDeck,
+                    グチョパ: hasGuchopa ? Infinity : 0,
+                }}
                 tutorialHand={showCardTutorial ? "パー" : undefined}
                 onRetry={handleRetry}
                 onCardSelect={

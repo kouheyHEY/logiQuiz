@@ -2,12 +2,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type {
     Hand,
     JudgeResult,
+    PlayerHand,
 } from "../component/game/gameLogic";
 
 export type BattlePhase = "dealing" | "revealing" | "resolved";
 
 export type BattleSequence = {
-    playerHand: Hand;
+    playerHand: PlayerHand;
     opponentHand: Hand;
     result: JudgeResult;
     phase: BattlePhase;

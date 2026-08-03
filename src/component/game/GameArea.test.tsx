@@ -34,6 +34,25 @@ describe("GameArea", () => {
         ).toHaveTextContent("∞");
     });
 
+    it("取得済みのグチョパをカード群の一番右に表示する", () => {
+        render(
+            <GameArea
+                message="グチョパ取得"
+                deck={{
+                    グー: Infinity,
+                    チョキ: Infinity,
+                    パー: Infinity,
+                    グチョパ: Infinity,
+                }}
+                onCardSelect={vi.fn()}
+            />,
+        );
+
+        const buttons = screen.getAllByRole("button");
+        expect(buttons).toHaveLength(4);
+        expect(buttons[3]).toHaveAccessibleName("グチョパ、使用可能");
+    });
+
     it("カード群が MessageWindow より先に DOM に現れる", () => {
         const { container } = render(<GameArea message="順序テスト" />);
 

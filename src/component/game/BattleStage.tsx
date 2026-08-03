@@ -1,7 +1,7 @@
-import { Hand, HandFist, Scissors, Sparkles } from "lucide-react";
+import { Bug as Beetle, Hand, HandFist, Scissors, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { BattleSequence } from "../../hooks/useBattleSequence";
-import type { Hand as HandType } from "./gameLogic";
+import type { PlayerHand as HandType } from "./gameLogic";
 
 export type BattleStageProps = {
     sequence: BattleSequence | null;
@@ -13,6 +13,7 @@ const handIcons: Record<HandType, LucideIcon> = {
     グー: HandFist,
     チョキ: Scissors,
     パー: Hand,
+    グチョパ: Sparkles,
 };
 
 const resultLabels = {
@@ -124,6 +125,12 @@ export default function BattleStage({
                     aria-hidden="true"
                 >
                     <span>{eventLabels[sequence.result]}</span>
+                    {sequence.result === "draw" ? (
+                        <Beetle
+                            className="battle-stage__aiko-beetle"
+                            aria-hidden="true"
+                        />
+                    ) : null}
                 </div>
             ) : null}
         </section>

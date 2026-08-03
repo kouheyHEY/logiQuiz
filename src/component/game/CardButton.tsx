@@ -1,4 +1,4 @@
-import { HandFist, Scissors, Hand } from "lucide-react";
+import { HandFist, Scissors, Hand, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export type CardButtonProps = {
@@ -20,6 +20,7 @@ const handIcons: Record<string, LucideIcon> = {
     グー: HandFist,
     チョキ: Scissors,
     パー: Hand,
+    グチョパ: Sparkles,
 };
 
 export default function CardButton({
@@ -31,6 +32,7 @@ export default function CardButton({
     orientation = "player",
 }: CardButtonProps) {
     const Icon = handIcons[String(label)] ?? Hand;
+    const isGuchopa = String(label) === "グチョパ";
     const isAvailable = count === undefined || count > 0;
     const availabilityLabel =
         count === undefined ? undefined : isAvailable ? "∞" : "0";
@@ -41,6 +43,7 @@ export default function CardButton({
     const className = [
         "card-button",
         `card-button--${orientation}`,
+        isGuchopa ? "card-button--guchopa" : "",
         !isAvailable ? "is-unavailable" : "",
     ]
         .filter(Boolean)

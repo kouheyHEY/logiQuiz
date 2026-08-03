@@ -137,6 +137,7 @@ button:disabled {
     display: inline-flex;
     align-items: center;
     gap: 0.2rem;
+    margin-right: 1.35rem;
     color: #fb7185;
 }
 
@@ -161,6 +162,20 @@ button:disabled {
 
 .game-header__heart-fill {
     color: #fb7185;
+}
+
+.game-header__life-overflow {
+    display: inline-flex;
+    align-items: center;
+    min-width: 1.6rem;
+    height: 1.25rem;
+    padding: 0 0.32rem;
+    border-radius: 999px;
+    background: rgba(251, 113, 133, 0.16);
+    color: #fecdd3;
+    font-size: 0.68rem;
+    font-weight: 850;
+    line-height: 1;
 }
 
 .game-header__row--aiko {
@@ -389,8 +404,19 @@ button:disabled {
     .battle-stage__result,
     .battle-stage__event-overlay,
     .battle-stage__event-overlay span,
+    .battle-stage__aiko-beetle,
+    .game-layout--event-win .game-header__hearts,
+    .game-layout--event-win .game-header__hearts::after,
     .game-layout--event-lose .game-header__hearts,
-    .game-layout--event-draw .game-header__hearts {
+    .game-layout--event-lose .game-header__hearts::after,
+    .game-layout--event-draw .game-header__hearts,
+    .game-layout--event-draw .game-header__hearts::after,
+    .game-layout--event-draw > .game-header,
+    .game-layout--event-draw > .enemy-panel,
+    .game-layout--event-draw > .game-opponent,
+    .game-layout--event-draw .battle-stage__field,
+    .game-layout--event-draw .battle-stage__result,
+    .game-layout--event-draw > .game-area {
         animation-duration: 0.01ms;
     }
 
@@ -612,6 +638,10 @@ button:disabled {
 }
 
 .battle-stage__event-overlay--draw {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
     background: radial-gradient(
         circle at center,
         rgba(124, 58, 237, 0.24),
@@ -622,7 +652,7 @@ button:disabled {
 }
 
 .battle-stage__event-overlay--draw span {
-    font-size: clamp(4.5rem, 19vw, 10rem);
+    font-size: clamp(5.5rem, 24vw, 11rem);
     letter-spacing: 0.08em;
     -webkit-text-stroke: clamp(4px, 0.75vw, 8px) #581c87;
     text-shadow:
@@ -631,10 +661,46 @@ button:disabled {
     animation: aiko-letter-shrink 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.battle-stage__aiko-beetle {
+    width: clamp(3.4rem, 16vw, 6.5rem);
+    height: auto;
+    color: #ffffff;
+    stroke-width: 2.4;
+    filter: drop-shadow(0 5px 0 #2e1065) drop-shadow(0 12px 22px rgba(15, 23, 42, 0.72));
+    animation: aiko-beetle-appear 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.game-layout--event-draw > .game-header,
+.game-layout--event-draw > .enemy-panel,
+.game-layout--event-draw > .game-opponent,
+.game-layout--event-draw .battle-stage__field,
+.game-layout--event-draw .battle-stage__result,
+.game-layout--event-draw > .game-area {
+    animation: aiko-screen-shake 0.58s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
 .game-layout--event-lose .game-header__hearts,
 .game-layout--event-draw .game-header__hearts {
     position: relative;
     animation: battle-life-hit 1.45s ease-in-out both;
+}
+
+.game-layout--event-win .game-header__hearts {
+    position: relative;
+    animation: battle-life-recover 1.45s ease-in-out both;
+}
+
+.game-layout--event-win .game-header__hearts::after {
+    content: "+0.25";
+    position: absolute;
+    left: calc(100% + 0.35rem);
+    top: -0.2rem;
+    color: #4ade80;
+    font-size: 0.78rem;
+    font-weight: 950;
+    white-space: nowrap;
+    text-shadow: 0 2px 8px rgba(15, 23, 42, 0.55);
+    animation: battle-life-damage-label 1.45s ease-out both;
 }
 
 .game-layout--event-lose .game-header__hearts::after,
@@ -704,6 +770,20 @@ button:disabled {
     }
 }
 
+@keyframes battle-life-recover {
+    0%,
+    18%,
+    100% {
+        transform: scale(1);
+        filter: none;
+    }
+    38%,
+    62% {
+        transform: scale(1.13);
+        filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.82));
+    }
+}
+
 @keyframes battle-life-damage-label {
     0%,
     18% {
@@ -731,6 +811,45 @@ button:disabled {
     }
     100% {
         transform: scale(0.98) rotate(0);
+    }
+}
+
+@keyframes aiko-beetle-appear {
+    0%,
+    20% {
+        opacity: 0;
+        transform: translateY(18px) scale(0.7);
+    }
+    44%,
+    78% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.94);
+    }
+}
+
+@keyframes aiko-screen-shake {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    18% {
+        transform: translate(-5px, 2px);
+    }
+    34% {
+        transform: translate(5px, -2px);
+    }
+    50% {
+        transform: translate(-4px, -1px);
+    }
+    66% {
+        transform: translate(3px, 2px);
+    }
+    82% {
+        transform: translate(-2px, 0);
     }
 }
 
@@ -870,6 +989,16 @@ button:disabled {
         box-shadow 0.2s ease;
 }
 
+.card-pad--has-guchopa .card-button {
+    width: clamp(68px, 20vw, 82px);
+    min-height: 102px;
+    padding-inline: 0.35rem;
+}
+
+.card-pad--has-guchopa .card-button__label {
+    font-size: 0.78rem;
+}
+
 .card-button--opponent {
     flex-direction: column-reverse;
     border-color: rgba(220, 38, 38, 0.2);
@@ -882,6 +1011,22 @@ button:disabled {
 
 .card-button--opponent .card-button__icon svg {
     transform: rotate(180deg);
+}
+
+.card-button--guchopa {
+    border-color: rgba(124, 58, 237, 0.55);
+    background: linear-gradient(180deg, #faf5ff 0%, #ede9fe 100%);
+    box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.14), 0 12px 28px rgba(88, 28, 135, 0.16);
+}
+
+.card-button--guchopa .card-button__icon {
+    background: #6d28d9;
+    color: #ffffff;
+}
+
+.card-button--guchopa .card-button__count {
+    background: rgba(109, 40, 217, 0.14);
+    color: #4c1d95;
 }
 
 .card-button.is-unavailable {

@@ -67,6 +67,9 @@ describe("BattleStage", () => {
         expect(
             container.querySelector(".battle-stage__event-overlay--draw"),
         ).toHaveTextContent("AIKO");
+        expect(
+            container.querySelector(".battle-stage__aiko-beetle"),
+        ).toBeInTheDocument();
     });
 
     it("カード公開中はAIKO演出を表示しない", () => {

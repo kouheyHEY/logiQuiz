@@ -69,6 +69,11 @@ const resultClass: Record<JudgeResult, string> = {
     draw: "animation-mock--draw",
 };
 
+const unlockedDeck = {
+    ...initialDeck,
+    グチョパ: Infinity,
+};
+
 export default function AnimationMock() {
     const [previewEvent, setPreviewEvent] = useState<PreviewEvent>("win");
     const [replayKey, setReplayKey] = useState(0);
@@ -122,7 +127,7 @@ export default function AnimationMock() {
                         battleSequence={preview.sequence}
                         message={preview.message}
                         isMessageVisible
-                        deck={initialDeck}
+                        deck={unlockedDeck}
                     />
                 </div>
 

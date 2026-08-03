@@ -1,14 +1,18 @@
-import type { Deck, Hand } from "./gameLogic";
+import {
+    hands,
+    type Deck,
+    type Hand,
+    type PlayerDeck,
+    type PlayerHand,
+} from "./gameLogic";
 import CardButton from "./CardButton";
 
 export type CardPadProps = {
-    onCardSelect?: (value: Hand) => void;
-    deck?: Deck;
+    onCardSelect?: (value: PlayerHand) => void;
+    deck?: Deck | PlayerDeck;
     orientation?: "player" | "opponent";
     tutorialHand?: Hand;
 };
-
-const hands: Hand[] = ["グー", "チョキ", "パー"];
 
 export default function CardPad({
     onCardSelect,
@@ -18,16 +22,30 @@ export default function CardPad({
 }: CardPadProps) {
     const activeTutorialHand =
         orientation === "player" ? tutorialHand : undefined;
+    const hasGuchopa =
+        orientation === "player" &&
+        deck !== undefined &&
+        "グチョパ" in deck &&
+        deck.グチョパ > 0;
+    const displayedHands: PlayerHand[] = hasGuchopa
+        ? [...hands, "グチョパ"]
+        : hands;
 
     return (
         <div
-            className={`card-pad card-pad--${orientation} ${activeTutorialHand ? "card-pad--tutorial" : ""}`}
+            className={`card-pad card-pad--${orientation} ${activeTutorialHand ? "card-pad--tutorial" : ""} ${hasGuchopa ? "card-pad--has-guchopa" : ""}`}
         >
             {activeTutorialHand ? (
                 <div className="card-tutorial__overlay" aria-hidden="true" />
             ) : null}
-            {hands.map((hand) => {
+            {displayedHands.map((hand) => {
                 const isTutorialTarget = activeTutorialHand === hand;
+                const count =
+                    hand === "グチョパ"
+                        ? deck && "グチョパ" in deck
+                            ? deck.グチョパ
+                            : 0
+                        : deck?.[hand];
 
                 return (
                     <div
@@ -41,13 +59,13 @@ export default function CardPad({
                         ) : null}
                         <CardButton
                             label={hand}
-                            count={deck?.[hand]}
+                            count={count}
                             displayOnly={orientation === "opponent"}
                             orientation={orientation}
                             disabled={
                                 orientation === "player" &&
                                 (!onCardSelect ||
-                                    (deck?.[hand] ?? 1) <= 0 ||
+                                    (count ?? 1) <= 0 ||
                                     (activeTutorialHand !== undefined &&
                                         !isTutorialTarget))
                             }
