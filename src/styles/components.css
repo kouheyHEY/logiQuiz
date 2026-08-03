@@ -164,20 +164,6 @@ button:disabled {
     color: #fb7185;
 }
 
-.game-header__life-overflow {
-    display: inline-flex;
-    align-items: center;
-    min-width: 1.6rem;
-    height: 1.25rem;
-    padding: 0 0.32rem;
-    border-radius: 999px;
-    background: rgba(251, 113, 133, 0.16);
-    color: #fecdd3;
-    font-size: 0.68rem;
-    font-weight: 850;
-    line-height: 1;
-}
-
 .game-header__row--aiko {
     color: #c084fc;
 }
@@ -685,24 +671,6 @@ button:disabled {
     animation: battle-life-hit 1.45s ease-in-out both;
 }
 
-.game-layout--event-win .game-header__hearts {
-    position: relative;
-    animation: battle-life-recover 1.45s ease-in-out both;
-}
-
-.game-layout--event-win .game-header__hearts::after {
-    content: "+0.25";
-    position: absolute;
-    left: calc(100% + 0.35rem);
-    top: -0.2rem;
-    color: #4ade80;
-    font-size: 0.78rem;
-    font-weight: 950;
-    white-space: nowrap;
-    text-shadow: 0 2px 8px rgba(15, 23, 42, 0.55);
-    animation: battle-life-damage-label 1.45s ease-out both;
-}
-
 .game-layout--event-lose .game-header__hearts::after,
 .game-layout--event-draw .game-header__hearts::after {
     position: absolute;
@@ -767,20 +735,6 @@ button:disabled {
     }
     38% {
         transform: translateX(3px) scale(1.08);
-    }
-}
-
-@keyframes battle-life-recover {
-    0%,
-    18%,
-    100% {
-        transform: scale(1);
-        filter: none;
-    }
-    38%,
-    62% {
-        transform: scale(1.13);
-        filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.82));
     }
 }
 

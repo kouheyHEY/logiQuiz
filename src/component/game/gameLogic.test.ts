@@ -1,5 +1,4 @@
 import {
-    calculateLifeAfterWin,
     calculateRemainingLife,
     hands,
     INITIAL_LIFE,
@@ -16,11 +15,6 @@ describe("gameLogic", () => {
         expect(calculateRemainingLife(2, "lose")).toBe(1);
         expect(calculateRemainingLife(2, "win")).toBe(2);
         expect(calculateRemainingLife(0.5, "lose")).toBe(0);
-    });
-
-    it("勝利するとライフがハート4分の1ぶん増える", () => {
-        expect(calculateLifeAfterWin(2)).toBe(2.25);
-        expect(calculateLifeAfterWin(2.75)).toBe(3);
     });
 
     it("maps numeric input to the correct hand choices in a loop", () => {

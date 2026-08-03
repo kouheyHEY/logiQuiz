@@ -124,7 +124,7 @@ describe("GameView", () => {
         expectOpponent(4);
     });
 
-    it("勝利ごとにライフが0.25増え、強敵撃破で右端にグチョパを得る", () => {
+    it("勝利してもライフは回復せず、強敵撃破で右端にグチョパを得る", () => {
         vi.spyOn(Math, "random").mockReturnValue(0);
         render(<GameView />);
 
@@ -140,7 +140,7 @@ describe("GameView", () => {
             winWithPaper();
         }
 
-        expect(screen.getByLabelText("ライフ: 3.5")).toBeInTheDocument();
+        expect(screen.getByLabelText("ライフ: 2")).toBeInTheDocument();
         expect(
             screen.getAllByText(/無敵の手「グチョパ」を手に入れました/),
         ).not.toHaveLength(0);
@@ -155,7 +155,7 @@ describe("GameView", () => {
         );
         resolveCurrentBattle();
 
-        expect(screen.getByLabelText("ライフ: 3.75")).toBeInTheDocument();
+        expect(screen.getByLabelText("ライフ: 2")).toBeInTheDocument();
 
         fireEvent.click(
             screen.getByRole("button", { name: "チョキ、使用可能" }),
@@ -167,4 +167,32 @@ describe("GameView", () => {
             screen.queryByRole("button", { name: "グチョパ、使用可能" }),
         ).not.toBeInTheDocument();
     });
+
+    it.each([
+        ["パー、使用可能", "win", "WIN", 2],
+        ["グー、使用可能", "draw", "AIKO", 1.5],
+        ["チョキ、使用可能", "lose", "LOSE", 1],
+    ])(
+        "グー固定の相手に %s を出すと画面結果が %s になる",
+        (buttonName, result, label, expectedLife) => {
+            const { container } = render(<GameView />);
+
+            fireEvent.click(screen.getByRole("button", { name: buttonName }));
+            act(() => {
+                vi.advanceTimersByTime(420);
+            });
+            act(() => {
+                vi.advanceTimersByTime(620);
+            });
+
+            expect(
+                container.querySelector(
+                    `.battle-stage__event-overlay--${result}`,
+                ),
+            ).toHaveTextContent(label);
+            expect(
+                screen.getByLabelText(`ライフ: ${expectedLife}`),
+            ).toBeInTheDocument();
+        },
+    );
 });

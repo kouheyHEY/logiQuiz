@@ -6,7 +6,6 @@ import {
 import GameLayout from "./game/GameLayout";
 import type { PlayerHand } from "./game/gameLogic";
 import {
-    calculateLifeAfterWin,
     calculateRemainingLife,
     INITIAL_LIFE,
     initialDeck,
@@ -91,7 +90,6 @@ function GameView() {
             }
 
             const nextWins = strongEnemyWins + 1;
-            setLife((prev) => calculateLifeAfterWin(prev));
             setStrongEnemyWins(nextWins);
             if (nextWins >= (enemyState.profile.requiredWins ?? 1)) {
                 const nextOpponent = currentOpponent + 1;
@@ -136,7 +134,6 @@ function GameView() {
         }
 
         if (result === "win") {
-            setLife((prev) => calculateLifeAfterWin(prev));
             setWinStreak((prev) => prev + 1);
             const nextOpponent = currentOpponent + 1;
             const nextEncounter = getNextEnemyAfterVictory(

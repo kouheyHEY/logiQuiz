@@ -28,27 +28,6 @@ describe("GameStatusHeader", () => {
         expect(fill).toHaveStyle({ clipPath: "inset(0 50% 0 0)" });
     });
 
-    it("0.25ライフを4分の1だけ塗られたハートで表示する", () => {
-        const { container } = render(
-            <GameHeader {...baseProps} life={0.25} />,
-        );
-        const fill = container.querySelector<SVGElement>(
-            ".game-header__heart-fill",
-        );
-
-        expect(fill).toHaveStyle({ clipPath: "inset(0 75% 0 0)" });
-    });
-
-    it("増えたライフを追加ハートとコンパクトな超過表示で表す", () => {
-        const { container } = render(
-            <GameHeader {...baseProps} life={5.25} />,
-        );
-
-        expect(container.querySelectorAll(".game-header__heart")).toHaveLength(3);
-        expect(screen.getByText("+2.25")).toBeInTheDocument();
-        expect(screen.getByLabelText("ライフ: 5.25")).toBeInTheDocument();
-    });
-
     it("AIKOの累計数がヘッダーに表示される", () => {
         render(<GameHeader {...baseProps} aikoCount={4} />);
         expect(screen.getByText("AIKO: 4")).toBeInTheDocument();

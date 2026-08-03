@@ -4,8 +4,6 @@
 import { Heart, Trophy, Equal } from "lucide-react";
 import { INITIAL_LIFE } from "./game/gameLogic";
 
-const MAX_VISIBLE_HEARTS = 3;
-
 export type GameHeaderProps = {
     /** ライフ */
     life?: number;
@@ -25,12 +23,6 @@ export default function GameHeader({
     winStreak,
     aikoCount,
 }: GameHeaderProps) {
-    const visibleHeartCount = Math.min(
-        MAX_VISIBLE_HEARTS,
-        Math.max(INITIAL_LIFE, Math.ceil(life)),
-    );
-    const overflowLife = Math.max(0, life - MAX_VISIBLE_HEARTS);
-
     return (
         <div className="game-header">
             <div className="game-header__content">
@@ -41,7 +33,7 @@ export default function GameHeader({
                         role="img"
                         aria-label={`ライフ: ${life}`}
                     >
-                        {Array.from({ length: visibleHeartCount }, (_, index) => {
+                        {Array.from({ length: INITIAL_LIFE }, (_, index) => {
                             const fillPercent = Math.max(
                                 0,
                                 Math.min(100, (life - index) * 100),
@@ -66,14 +58,6 @@ export default function GameHeader({
                                 </span>
                             );
                         })}
-                        {overflowLife > 0 ? (
-                            <span
-                                className="game-header__life-overflow"
-                                aria-hidden="true"
-                            >
-                                +{overflowLife}
-                            </span>
-                        ) : null}
                     </div>
                 </div>
                 <div className="game-header__row">

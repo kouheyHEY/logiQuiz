@@ -48,10 +48,6 @@ export function calculateRemainingLife(
     return Math.max(0, currentLife - lifeDamage[result]);
 }
 
-export function calculateLifeAfterWin(currentLife: number): number {
-    return currentLife + 0.25;
-}
-
 const winsAgainst: Record<Hand, Hand> = {
     グー: "チョキ",
     チョキ: "パー",
