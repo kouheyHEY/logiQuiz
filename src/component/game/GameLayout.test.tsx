@@ -86,4 +86,21 @@ describe("GameLayout", () => {
         expect(onCardSelect).toHaveBeenCalledOnce();
         expect(onCardSelect).toHaveBeenCalledWith("グー");
     });
+
+    it("解決した結果をライフ変化アニメーション用クラスへ反映する", () => {
+        const { container } = render(
+            <GameLayout
+                battleSequence={{
+                    playerHand: "グー",
+                    opponentHand: "パー",
+                    result: "lose",
+                    phase: "resolved",
+                }}
+            />,
+        );
+
+        expect(container.querySelector(".game-layout")).toHaveClass(
+            "game-layout--event-lose",
+        );
+    });
 });

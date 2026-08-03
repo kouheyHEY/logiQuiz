@@ -11,6 +11,7 @@ const previews: Record<
     PreviewEvent,
     {
         label: string;
+        resultText: string;
         sequence: BattleSequence;
         life: number;
         winStreak: number;
@@ -20,6 +21,7 @@ const previews: Record<
 > = {
     win: {
         label: "勝利",
+        resultText: "WIN",
         sequence: {
             playerHand: "グー",
             opponentHand: "チョキ",
@@ -33,6 +35,7 @@ const previews: Record<
     },
     lose: {
         label: "敗北",
+        resultText: "LOSE",
         sequence: {
             playerHand: "チョキ",
             opponentHand: "グー",
@@ -46,6 +49,7 @@ const previews: Record<
     },
     draw: {
         label: "AIKO",
+        resultText: "AIKO",
         sequence: {
             playerHand: "パー",
             opponentHand: "パー",
@@ -123,7 +127,7 @@ export default function AnimationMock() {
                 </div>
 
                 <div className="animation-mock__event-layer" aria-hidden="true">
-                    <span>{preview.label}</span>
+                    <span>{preview.resultText}</span>
                 </div>
 
                 {previewEvent === "draw" ? (

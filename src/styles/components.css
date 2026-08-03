@@ -387,8 +387,10 @@ button:disabled {
 
     .battle-card,
     .battle-stage__result,
-    .battle-stage__aiko-overlay,
-    .battle-stage__aiko-overlay span {
+    .battle-stage__event-overlay,
+    .battle-stage__event-overlay span,
+    .game-layout--event-lose .game-header__hearts,
+    .game-layout--event-draw .game-header__hearts {
         animation-duration: 0.01ms;
     }
 
@@ -571,7 +573,7 @@ button:disabled {
     border-color: #eab308;
 }
 
-.battle-stage__aiko-overlay {
+.battle-stage__event-overlay {
     position: fixed;
     inset: 0;
     z-index: 100;
@@ -579,31 +581,84 @@ button:disabled {
     place-items: center;
     overflow: hidden;
     pointer-events: none;
+    animation: event-screen-fade 1.65s ease-in-out both;
+}
+
+.battle-stage__event-overlay span {
+    color: #ffffff;
+    font-family: var(--heading);
+    font-weight: 1000;
+    line-height: 0.9;
+    paint-order: stroke fill;
+}
+
+.battle-stage__event-overlay--win span,
+.battle-stage__event-overlay--lose span {
+    font-size: clamp(1.8rem, 9vw, 3.5rem);
+    letter-spacing: 0.18em;
+    animation: battle-outcome-label 1.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.battle-stage__event-overlay--win span {
+    color: #f0fdf4;
+    -webkit-text-stroke: 3px #166534;
+    text-shadow: 0 4px 12px rgba(5, 46, 22, 0.65);
+}
+
+.battle-stage__event-overlay--lose span {
+    color: #fff1f2;
+    -webkit-text-stroke: 3px #881337;
+    text-shadow: 0 4px 12px rgba(76, 5, 25, 0.65);
+}
+
+.battle-stage__event-overlay--draw {
     background: radial-gradient(
         circle at center,
         rgba(124, 58, 237, 0.24),
         rgba(15, 23, 42, 0.08) 38%,
         transparent 62%
     );
-    animation: aiko-screen-fade 1.8s ease-in-out both;
+    animation-duration: 1.8s;
 }
 
-.battle-stage__aiko-overlay span {
-    color: #ffffff;
-    font-family: var(--heading);
+.battle-stage__event-overlay--draw span {
     font-size: clamp(4.5rem, 19vw, 10rem);
-    font-weight: 1000;
     letter-spacing: 0.08em;
-    line-height: 0.9;
     -webkit-text-stroke: clamp(4px, 0.75vw, 8px) #581c87;
-    paint-order: stroke fill;
     text-shadow:
         0 5px 0 #2e1065,
         0 12px 32px rgba(15, 23, 42, 0.78);
     animation: aiko-letter-shrink 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes aiko-screen-fade {
+.game-layout--event-lose .game-header__hearts,
+.game-layout--event-draw .game-header__hearts {
+    position: relative;
+    animation: battle-life-hit 1.45s ease-in-out both;
+}
+
+.game-layout--event-lose .game-header__hearts::after,
+.game-layout--event-draw .game-header__hearts::after {
+    position: absolute;
+    left: calc(100% + 0.35rem);
+    top: -0.2rem;
+    color: #fb7185;
+    font-size: 0.78rem;
+    font-weight: 950;
+    white-space: nowrap;
+    text-shadow: 0 2px 8px rgba(15, 23, 42, 0.55);
+    animation: battle-life-damage-label 1.45s ease-out both;
+}
+
+.game-layout--event-lose .game-header__hearts::after {
+    content: "−1";
+}
+
+.game-layout--event-draw .game-header__hearts::after {
+    content: "−0.5";
+}
+
+@keyframes event-screen-fade {
     0% {
         opacity: 0;
     }
@@ -613,6 +668,56 @@ button:disabled {
     }
     100% {
         opacity: 0;
+    }
+}
+
+@keyframes battle-outcome-label {
+    0%,
+    16% {
+        opacity: 0;
+        transform: translateY(8px) scale(1.15);
+    }
+    36%,
+    70% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-5px) scale(0.96);
+    }
+}
+
+@keyframes battle-life-hit {
+    0%,
+    18%,
+    100% {
+        transform: translateX(0) scale(1);
+        filter: none;
+    }
+    30% {
+        transform: translateX(-3px) scale(1.12);
+        filter: drop-shadow(0 0 8px rgba(251, 113, 133, 0.82));
+    }
+    38% {
+        transform: translateX(3px) scale(1.08);
+    }
+}
+
+@keyframes battle-life-damage-label {
+    0%,
+    18% {
+        opacity: 0;
+        transform: translateY(8px) scale(0.82);
+    }
+    34%,
+    66% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.94);
     }
 }
 
@@ -907,10 +1012,10 @@ button:disabled {
 
 .animation-mock--win .animation-mock__event-layer span {
     color: #f0fdf4;
-    font-size: clamp(4.6rem, 21vw, 10rem);
-    letter-spacing: 0.04em;
-    -webkit-text-stroke: clamp(4px, 0.75vw, 8px) #166534;
-    text-shadow: 0 8px 0 #052e16, 0 18px 40px rgba(5, 46, 22, 0.7);
+    font-size: clamp(1.8rem, 9vw, 3.5rem);
+    letter-spacing: 0.18em;
+    -webkit-text-stroke: 3px #166534;
+    text-shadow: 0 4px 12px rgba(5, 46, 22, 0.65);
     animation: mock-win-stamp 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -928,14 +1033,11 @@ button:disabled {
 }
 
 .animation-mock--lose .animation-mock__event-layer span {
-    padding: 0.55rem 1.3rem;
-    border: 3px solid #e9d5ff;
-    border-radius: 10px;
-    background: #2e1065;
-    color: #ffffff;
-    font-size: clamp(2.1rem, 11vw, 4.2rem);
-    letter-spacing: 0.12em;
-    box-shadow: 0 0 0 5px rgba(88, 28, 135, 0.48), 0 16px 36px rgba(15, 23, 42, 0.58);
+    color: #fff1f2;
+    font-size: clamp(1.8rem, 9vw, 3.5rem);
+    letter-spacing: 0.18em;
+    -webkit-text-stroke: 3px #881337;
+    text-shadow: 0 4px 12px rgba(76, 5, 25, 0.65);
     animation: mock-lose-label 2.35s cubic-bezier(0.2, 0.85, 0.2, 1) both;
 }
 
@@ -956,7 +1058,7 @@ button:disabled {
     animation: mock-event-layer 2.8s ease-in-out both;
 }
 
-.animation-mock--draw .battle-stage__aiko-overlay {
+.animation-mock .battle-stage__event-overlay {
     display: none;
 }
 
@@ -1026,9 +1128,9 @@ button:disabled {
 }
 
 @keyframes mock-win-stamp {
-    0% { opacity: 0; transform: scale(2.4) rotate(-7deg); }
+    0% { opacity: 0; transform: scale(1.28); }
     32%, 70% { opacity: 1; transform: scale(1) rotate(0); }
-    100% { opacity: 0; transform: scale(0.92); }
+    100% { opacity: 0; transform: scale(0.96); }
 }
 
 @keyframes mock-winning-card {
@@ -1042,9 +1144,9 @@ button:disabled {
 }
 
 @keyframes mock-lose-label {
-    0%, 28% { opacity: 0; transform: translateY(18px) scale(0.8); }
+    0%, 28% { opacity: 0; transform: translateY(10px) scale(0.9); }
     42%, 72% { opacity: 1; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-10px) scale(0.96); }
+    100% { opacity: 0; transform: translateY(-6px) scale(0.96); }
 }
 
 @keyframes mock-opponent-strike {

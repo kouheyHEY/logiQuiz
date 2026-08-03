@@ -21,6 +21,12 @@ const resultLabels = {
     draw: "あいこ",
 } as const;
 
+const eventLabels = {
+    win: "WIN",
+    lose: "LOSE",
+    draw: "AIKO",
+} as const;
+
 function Face({
     hand,
     owner,
@@ -112,9 +118,12 @@ export default function BattleStage({
                 </button>
             ) : null}
 
-            {isResolved && sequence.result === "draw" ? (
-                <div className="battle-stage__aiko-overlay" aria-hidden="true">
-                    <span>AIKO</span>
+            {isResolved ? (
+                <div
+                    className={`battle-stage__event-overlay battle-stage__event-overlay--${sequence.result}`}
+                    aria-hidden="true"
+                >
+                    <span>{eventLabels[sequence.result]}</span>
                 </div>
             ) : null}
         </section>

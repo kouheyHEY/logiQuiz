@@ -18,7 +18,7 @@ export type BattlePayload = Omit<BattleSequence, "phase">;
 const normalDurations = {
     dealing: 420,
     revealing: 620,
-    resolved: 900,
+    resolved: 1650,
     drawResolved: 1800,
 };
 

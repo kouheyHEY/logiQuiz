@@ -50,8 +50,13 @@ export default function GameLayout({
         aikoCount,
     };
 
+    const eventClass =
+        battleSequence?.phase === "resolved"
+            ? ` game-layout--event-${battleSequence.result}`
+            : "";
+
     return (
-        <div className="game-layout">
+        <div className={`game-layout${eventClass}`}>
             <GameHeader {...headerProps} />
             {enemy && enemyDeck ? (
                 <EnemyPanel

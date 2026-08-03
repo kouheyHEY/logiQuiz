@@ -35,7 +35,7 @@ describe("BattleStage", () => {
     });
 
     it("結果フェーズで勝敗を表示する", () => {
-        render(
+        const { container } = render(
             <BattleStage
                 sequence={{
                     playerHand: "グー",
@@ -47,6 +47,9 @@ describe("BattleStage", () => {
         );
 
         expect(screen.getByText("勝利！")).toBeInTheDocument();
+        expect(
+            container.querySelector(".battle-stage__event-overlay--win"),
+        ).toHaveTextContent("WIN");
     });
 
     it("あいこの結果フェーズで画面中央演出を表示する", () => {
@@ -62,7 +65,7 @@ describe("BattleStage", () => {
         );
 
         expect(
-            container.querySelector(".battle-stage__aiko-overlay"),
+            container.querySelector(".battle-stage__event-overlay--draw"),
         ).toHaveTextContent("AIKO");
     });
 
@@ -79,8 +82,25 @@ describe("BattleStage", () => {
         );
 
         expect(
-            container.querySelector(".battle-stage__aiko-overlay"),
+            container.querySelector(".battle-stage__event-overlay"),
         ).not.toBeInTheDocument();
+    });
+
+    it("敗北時は控えめなLOSE演出を表示する", () => {
+        const { container } = render(
+            <BattleStage
+                sequence={{
+                    playerHand: "チョキ",
+                    opponentHand: "グー",
+                    result: "lose",
+                    phase: "resolved",
+                }}
+            />,
+        );
+
+        expect(
+            container.querySelector(".battle-stage__event-overlay--lose"),
+        ).toHaveTextContent("LOSE");
     });
 
     it("敗北時はバトルフィールド内にリトライボタンを表示する", () => {

@@ -4,12 +4,15 @@ import AnimationMock from "./AnimationMock";
 
 describe("AnimationMock", () => {
     it("勝利・敗北・AIKOの演出を切り替えられる", () => {
-        render(<AnimationMock />);
+        const { container } = render(<AnimationMock />);
 
         expect(screen.getByRole("button", { name: "勝利" })).toHaveAttribute(
             "aria-pressed",
             "true",
         );
+        expect(
+            container.querySelector(".animation-mock__event-layer"),
+        ).toHaveTextContent("WIN");
 
         fireEvent.click(screen.getByRole("button", { name: "AIKO" }));
 
@@ -18,6 +21,16 @@ describe("AnimationMock", () => {
             "true",
         );
         expect(screen.getByText("−0.5")).toBeInTheDocument();
+    });
+
+    it("敗北演出は控えめなLOSE表記を使う", () => {
+        const { container } = render(<AnimationMock />);
+
+        fireEvent.click(screen.getByRole("button", { name: "敗北" }));
+
+        expect(
+            container.querySelector(".animation-mock__event-layer"),
+        ).toHaveTextContent("LOSE");
     });
 
     it("再生ボタンを操作できる", () => {

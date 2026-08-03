@@ -54,7 +54,12 @@ describe("useBattleSequence", () => {
         expect(onResolve).toHaveBeenCalledWith(battle);
 
         act(() => {
-            vi.advanceTimersByTime(900);
+            vi.advanceTimersByTime(1649);
+        });
+        expect(screen.getByText("resolved")).toBeInTheDocument();
+
+        act(() => {
+            vi.advanceTimersByTime(1);
         });
         expect(screen.getByText("idle")).toBeInTheDocument();
 
