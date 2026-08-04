@@ -86,7 +86,7 @@ export function useBattleSequence(
             return () => window.clearTimeout(timeoutId);
         }
 
-        if (sequence.result === "lose" || holdResolved) {
+        if (holdResolved) {
             return;
         }
 

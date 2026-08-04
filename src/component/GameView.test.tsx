@@ -35,7 +35,9 @@ describe("GameView", () => {
         );
         resolveCurrentBattle();
 
-        fireEvent.click(screen.getByRole("button", { name: "リトライ" }));
+        expect(
+            screen.queryByRole("button", { name: "リトライ" }),
+        ).not.toBeInTheDocument();
         expect(screen.getByLabelText("ライフ: 1")).toBeInTheDocument();
 
         fireEvent.click(
@@ -106,7 +108,8 @@ describe("GameView", () => {
         play("パー、使用可能");
         expectOpponent(3);
 
-        // グーを出す通常敵に敗北してリトライする。
+        // グーを出す通常敵に2回敗北してゲームオーバーにする。
+        play("チョキ、使用可能");
         play("チョキ、使用可能");
         fireEvent.click(screen.getByRole("button", { name: "リトライ" }));
 
@@ -149,6 +152,7 @@ describe("GameView", () => {
         expect(buttons[buttons.length - 1]).toHaveAccessibleName(
             "グチョパ、使用可能",
         );
+        expect(buttons[buttons.length - 1]).toHaveTextContent("1");
 
         fireEvent.click(
             screen.getByRole("button", { name: "グチョパ、使用可能" }),
@@ -156,11 +160,16 @@ describe("GameView", () => {
         resolveCurrentBattle();
 
         expect(screen.getByLabelText("ライフ: 2")).toBeInTheDocument();
+        expect(
+            screen.queryByRole("button", { name: "グチョパ、使用可能" }),
+        ).not.toBeInTheDocument();
 
-        fireEvent.click(
-            screen.getByRole("button", { name: "チョキ、使用可能" }),
-        );
-        resolveCurrentBattle();
+        for (let count = 0; count < 2; count += 1) {
+            fireEvent.click(
+                screen.getByRole("button", { name: "チョキ、使用可能" }),
+            );
+            resolveCurrentBattle();
+        }
         fireEvent.click(screen.getByRole("button", { name: "リトライ" }));
 
         expect(

@@ -42,7 +42,7 @@ describe("GameArea", () => {
                     グー: Infinity,
                     チョキ: Infinity,
                     パー: Infinity,
-                    グチョパ: Infinity,
+                    グチョパ: 1,
                 }}
                 onCardSelect={vi.fn()}
             />,
@@ -51,6 +51,10 @@ describe("GameArea", () => {
         const buttons = screen.getAllByRole("button");
         expect(buttons).toHaveLength(4);
         expect(buttons[3]).toHaveAccessibleName("グチョパ、使用可能");
+        expect(buttons[3]).toHaveTextContent("1");
+        expect(
+            buttons[3].querySelector(".lucide-hand-metal"),
+        ).toBeInTheDocument();
     });
 
     it("カード群が MessageWindow より先に DOM に現れる", () => {

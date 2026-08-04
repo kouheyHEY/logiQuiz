@@ -97,7 +97,7 @@ describe("useBattleSequence", () => {
         vi.useRealTimers();
     });
 
-    it("敗北結果はリトライ操作まで維持する", () => {
+    it("ライフが残る敗北結果は演出後に終了する", () => {
         vi.useFakeTimers();
         const loseBattle: BattlePayload = {
             playerHand: "グー",
@@ -114,11 +114,12 @@ describe("useBattleSequence", () => {
             vi.advanceTimersByTime(620);
         });
         act(() => {
-            vi.advanceTimersByTime(5000);
+            vi.advanceTimersByTime(1649);
         });
         expect(screen.getByText("resolved")).toBeInTheDocument();
-
-        fireEvent.click(screen.getByRole("button", { name: "finish" }));
+        act(() => {
+            vi.advanceTimersByTime(1);
+        });
         expect(screen.getByText("idle")).toBeInTheDocument();
 
         vi.useRealTimers();

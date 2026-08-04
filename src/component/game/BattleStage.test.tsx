@@ -52,6 +52,25 @@ describe("BattleStage", () => {
         ).toHaveTextContent("WIN");
     });
 
+    it("グチョパはhand-metalアイコンで表示する", () => {
+        const { container } = render(
+            <BattleStage
+                sequence={{
+                    playerHand: "グチョパ",
+                    opponentHand: "グー",
+                    result: "win",
+                    phase: "resolved",
+                }}
+            />,
+        );
+
+        expect(
+            container.querySelector(
+                ".battle-card--player .lucide-hand-metal",
+            ),
+        ).toBeInTheDocument();
+    });
+
     it("あいこの結果フェーズで画面中央演出を表示する", () => {
         const { container } = render(
             <BattleStage
@@ -106,7 +125,25 @@ describe("BattleStage", () => {
         ).toHaveTextContent("LOSE");
     });
 
-    it("敗北時はバトルフィールド内にリトライボタンを表示する", () => {
+    it("ライフが残る敗北時はリトライを表示しない", () => {
+        render(
+            <BattleStage
+                sequence={{
+                    playerHand: "グー",
+                    opponentHand: "パー",
+                    result: "lose",
+                    phase: "resolved",
+                }}
+                onRetry={vi.fn()}
+            />,
+        );
+
+        expect(
+            screen.queryByRole("button", { name: "リトライ" }),
+        ).not.toBeInTheDocument();
+    });
+
+    it("敗北でゲームオーバーになった場合はリトライを表示する", () => {
         const onRetry = vi.fn();
         render(
             <BattleStage
@@ -116,6 +153,7 @@ describe("BattleStage", () => {
                     result: "lose",
                     phase: "resolved",
                 }}
+                isGameOver
                 onRetry={onRetry}
             />,
         );
@@ -161,7 +199,7 @@ describe("BattleStage", () => {
         ).not.toBeInTheDocument();
     });
 
-    it("ゲームオーバーなど再戦不可の場合はリトライを表示しない", () => {
+    it("ゲームオーバーでも処理が未指定ならリトライを表示しない", () => {
         render(
             <BattleStage
                 sequence={{
@@ -170,6 +208,7 @@ describe("BattleStage", () => {
                     result: "lose",
                     phase: "resolved",
                 }}
+                isGameOver
             />,
         );
 

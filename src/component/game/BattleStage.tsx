@@ -1,4 +1,11 @@
-import { Bug as Beetle, Hand, HandFist, Scissors, Sparkles } from "lucide-react";
+import {
+    Bug as Beetle,
+    Hand,
+    HandFist,
+    HandMetal,
+    Scissors,
+    Sparkles,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { BattleSequence } from "../../hooks/useBattleSequence";
 import type { PlayerHand as HandType } from "./gameLogic";
@@ -13,7 +20,7 @@ const handIcons: Record<HandType, LucideIcon> = {
     グー: HandFist,
     チョキ: Scissors,
     パー: Hand,
-    グチョパ: Sparkles,
+    グチョパ: HandMetal,
 };
 
 const resultLabels = {
@@ -107,9 +114,7 @@ export default function BattleStage({
                       : "カードを出す…"}
             </div>
 
-            {isResolved &&
-            (sequence.result === "lose" || isGameOver) &&
-            onRetry ? (
+            {isResolved && isGameOver && onRetry ? (
                 <button
                     type="button"
                     className="battle-stage__retry"

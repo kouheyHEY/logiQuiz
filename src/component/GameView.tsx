@@ -39,7 +39,7 @@ function GameView() {
         createEnemyLoopState(),
     );
     const [strongEnemyWins, setStrongEnemyWins] = useState(0);
-    const [hasGuchopa, setHasGuchopa] = useState(false);
+    const [guchopaCount, setGuchopaCount] = useState(0);
     const [showCardTutorial, setShowCardTutorial] = useState(
         () => !hasCompletedTutorial(),
     );
@@ -102,7 +102,7 @@ function GameView() {
                 setEnemyLoop(nextEncounter.loop);
                 setStrongEnemyWins(0);
                 setWinStreak((prev) => prev + 1);
-                setHasGuchopa(true);
+                setGuchopaCount((prev) => prev + 1);
                 setMessage(
                     `強敵を撃破しました！無敵の手「グチョパ」を手に入れました。`,
                 );
@@ -190,19 +190,12 @@ function GameView() {
         setEnemyState(createEnemyBattleState(retryProfile));
         setStrongEnemyWins(0);
         setWinStreak(0);
-        setHasGuchopa(false);
+        setGuchopaCount(0);
 
-        if (gameOver) {
-            setLife(INITIAL_LIFE);
-            setGameOver(false);
-            setMessage(
-                "ライフを回復し、相手とボスまでの進行をリセットしました。",
-            );
-            return;
-        }
-
+        setLife(INITIAL_LIFE);
+        setGameOver(false);
         setMessage(
-            "相手とボスまでの進行をリセットしました。カードを選択してください。",
+            "ライフを回復し、相手とボスまでの進行をリセットしました。",
         );
     };
 
@@ -215,6 +208,12 @@ function GameView() {
         }
 
         const opponent = enemyState.plannedHand;
+        if (chosen === "グチョパ") {
+            if (guchopaCount <= 0) {
+                return;
+            }
+            setGuchopaCount((prev) => Math.max(0, prev - 1));
+        }
         if (showCardTutorial && chosen === "パー") {
             completeTutorial();
             setShowCardTutorial(false);
@@ -244,7 +243,7 @@ function GameView() {
                 isGameOver={gameOver}
                 deck={{
                     ...initialDeck,
-                    グチョパ: hasGuchopa ? Infinity : 0,
+                    グチョパ: guchopaCount,
                 }}
                 tutorialHand={showCardTutorial ? "パー" : undefined}
                 onRetry={handleRetry}

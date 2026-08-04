@@ -71,7 +71,7 @@ const resultClass: Record<JudgeResult, string> = {
 
 const unlockedDeck = {
     ...initialDeck,
-    グチョパ: Infinity,
+    グチョパ: 1,
 };
 
 export default function AnimationMock() {
