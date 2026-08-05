@@ -46,6 +46,17 @@ describe("enemyLogic", () => {
         }
     });
 
+    it("同じ通常敵を連続で選ばない", () => {
+        const next = getNextEnemyAfterVictory(
+            normalEnemies[0],
+            { normalWins: 0, normalWinsRequired: 3 },
+            () => 0,
+        );
+
+        expect(next.profile.id).toBe(normalEnemies[1].id);
+        expect(next.profile.id).not.toBe(normalEnemies[0].id);
+    });
+
     it("強敵撃破後は通常敵へ戻り、間隔を再抽選する", () => {
         const values = [0, 0.99];
         const next = getNextEnemyAfterVictory(

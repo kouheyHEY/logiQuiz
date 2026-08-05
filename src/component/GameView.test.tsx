@@ -127,7 +127,7 @@ describe("GameView", () => {
         expectOpponent(4);
     });
 
-    it("勝利してもライフは回復せず、強敵撃破で右端にグチョパを得る", () => {
+    it("通常勝利では回復せず、強敵撃破で0.5回復して右端にグチョパを得る", () => {
         vi.spyOn(Math, "random").mockReturnValue(0);
         render(<GameView />);
 
@@ -138,14 +138,26 @@ describe("GameView", () => {
             resolveCurrentBattle();
         };
 
-        // チュートリアル1勝、通常敵3勝、強敵へ2勝。
-        for (let count = 0; count < 6; count += 1) {
+        // あいこでライフを減らした後、チュートリアル1勝と通常敵3勝。
+        fireEvent.click(
+            screen.getByRole("button", { name: "グー、使用可能" }),
+        );
+        resolveCurrentBattle();
+        expect(screen.getByLabelText("ライフ: 1.5")).toBeInTheDocument();
+
+        for (let count = 0; count < 4; count += 1) {
+            winWithPaper();
+        }
+        expect(screen.getByLabelText("ライフ: 1.5")).toBeInTheDocument();
+
+        // 強敵への2勝で撃破し、ライフを0.5回復する。
+        for (let count = 0; count < 2; count += 1) {
             winWithPaper();
         }
 
         expect(screen.getByLabelText("ライフ: 2")).toBeInTheDocument();
         expect(
-            screen.getAllByText(/無敵の手「グチョパ」を手に入れました/),
+            screen.getAllByText(/ライフを 0.5 回復.*「グチョパ」/),
         ).not.toHaveLength(0);
 
         const buttons = screen.getAllByRole("button");
@@ -164,12 +176,24 @@ describe("GameView", () => {
             screen.queryByRole("button", { name: "グチョパ、使用可能" }),
         ).not.toBeInTheDocument();
 
-        for (let count = 0; count < 2; count += 1) {
-            fireEvent.click(
-                screen.getByRole("button", { name: "チョキ、使用可能" }),
-            );
-            resolveCurrentBattle();
-        }
+        fireEvent.click(
+            screen.getByRole("button", { name: "チョキ、使用可能" }),
+        );
+        resolveCurrentBattle();
+        expect(screen.getByLabelText("ライフ: 1")).toBeInTheDocument();
+        expect(
+            screen.queryByRole("button", { name: "リトライ" }),
+        ).not.toBeInTheDocument();
+
+        fireEvent.click(
+            screen.getByRole("button", { name: "チョキ、使用可能" }),
+        );
+        resolveCurrentBattle();
+        expect(screen.getByLabelText("ライフ: 0")).toBeInTheDocument();
+        expect(
+            screen.getByRole("button", { name: "リトライ" }),
+        ).toBeInTheDocument();
+
         fireEvent.click(screen.getByRole("button", { name: "リトライ" }));
 
         expect(

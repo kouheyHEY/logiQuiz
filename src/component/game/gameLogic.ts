@@ -48,6 +48,17 @@ export function calculateRemainingLife(
     return Math.max(0, currentLife - lifeDamage[result]);
 }
 
+export function calculateRecoveredLife(
+    currentLife: number,
+    recovery: number,
+): number {
+    if (currentLife <= 0 || recovery <= 0) {
+        return Math.max(0, currentLife);
+    }
+
+    return Math.min(INITIAL_LIFE, currentLife + recovery);
+}
+
 const winsAgainst: Record<Hand, Hand> = {
     グー: "チョキ",
     チョキ: "パー",

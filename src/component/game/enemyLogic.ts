@@ -95,12 +95,15 @@ function cloneDeck(deck: Deck): Deck {
 function selectRandomProfile(
     profiles: EnemyProfile[],
     random: () => number,
+    excludedId?: string,
 ): EnemyProfile {
+    const candidates = profiles.filter((profile) => profile.id !== excludedId);
+    const selectableProfiles = candidates.length > 0 ? candidates : profiles;
     const index = Math.min(
-        profiles.length - 1,
-        Math.floor(random() * profiles.length),
+        selectableProfiles.length - 1,
+        Math.floor(random() * selectableProfiles.length),
     );
-    return profiles[index];
+    return selectableProfiles[index];
 }
 
 export function createEnemyLoopState(
@@ -140,7 +143,11 @@ export function getNextEnemyAfterVictory(
     }
 
     return {
-        profile: selectRandomProfile(normalEnemies, random),
+        profile: selectRandomProfile(
+            normalEnemies,
+            random,
+            currentEnemy.id,
+        ),
         loop: { ...loop, normalWins },
     };
 }

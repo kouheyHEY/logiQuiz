@@ -6,6 +6,7 @@ import {
 import GameLayout from "./game/GameLayout";
 import type { PlayerHand } from "./game/gameLogic";
 import {
+    calculateRecoveredLife,
     calculateRemainingLife,
     INITIAL_LIFE,
     initialDeck,
@@ -31,7 +32,6 @@ function GameView() {
     const [message, setMessage] = useState(
         "グー・チョキ・パーのいずれかを選択してください。",
     );
-    const [gameOver, setGameOver] = useState(false);
     const [enemyState, setEnemyState] = useState(() =>
         createEnemyBattleState(tutorialEnemy),
     );
@@ -43,6 +43,7 @@ function GameView() {
     const [showCardTutorial, setShowCardTutorial] = useState(
         () => !hasCompletedTutorial(),
     );
+    const gameOver = life <= 0;
 
     const isStrongEnemyBattle =
         enemyState.profile.isStrong === true && !gameOver;
@@ -59,7 +60,6 @@ function GameView() {
                 setAikoCount((prev) => prev + 1);
                 setLife(nextLife);
                 if (nextLife <= 0) {
-                    setGameOver(true);
                     setMessage(
                         `強敵の出した手は ${opponent}。あいこでライフを 0.5 失い、ゲームオーバーです。`,
                     );
@@ -76,7 +76,6 @@ function GameView() {
                 const nextLife = calculateRemainingLife(life, result);
                 setLife(nextLife);
                 if (nextLife <= 0) {
-                    setGameOver(true);
                     setMessage(
                         `強敵の出した手は ${opponent}。敗北しました。ライフが 0 になりゲームオーバーです。`,
                     );
@@ -92,6 +91,7 @@ function GameView() {
             const nextWins = strongEnemyWins + 1;
             setStrongEnemyWins(nextWins);
             if (nextWins >= (enemyState.profile.requiredWins ?? 1)) {
+                const recoveredLife = calculateRecoveredLife(life, 0.5);
                 const nextOpponent = currentOpponent + 1;
                 const nextEncounter = getNextEnemyAfterVictory(
                     enemyState.profile,
@@ -103,8 +103,11 @@ function GameView() {
                 setStrongEnemyWins(0);
                 setWinStreak((prev) => prev + 1);
                 setGuchopaCount((prev) => prev + 1);
+                setLife(recoveredLife);
                 setMessage(
-                    `強敵を撃破しました！無敵の手「グチョパ」を手に入れました。`,
+                    recoveredLife > life
+                        ? `強敵を撃破しました！ライフを 0.5 回復し、無敵の手「グチョパ」を手に入れました。`
+                        : `強敵を撃破しました！ライフは最大です。無敵の手「グチョパ」を手に入れました。`,
                 );
                 return;
             }
@@ -120,7 +123,6 @@ function GameView() {
             setAikoCount((prev) => prev + 1);
             setLife(nextLife);
             if (nextLife <= 0) {
-                setGameOver(true);
                 setMessage(
                     `相手の出した手は ${opponent}。あいこでライフを 0.5 失い、ゲームオーバーです。`,
                 );
@@ -153,7 +155,6 @@ function GameView() {
         const nextLife = calculateRemainingLife(life, result);
         setLife(nextLife);
         if (nextLife <= 0) {
-            setGameOver(true);
             setMessage(
                 `相手の出した手は ${opponent}。敗北しました。ライフが 0 になりゲームオーバーです。`,
             );
@@ -193,7 +194,6 @@ function GameView() {
         setGuchopaCount(0);
 
         setLife(INITIAL_LIFE);
-        setGameOver(false);
         setMessage(
             "ライフを回復し、相手とボスまでの進行をリセットしました。",
         );
