@@ -1,98 +1,44 @@
-# logiQuiz
+# ジャソケソバトラー
 
-じゃんけんのヒントと心理戦を組み合わせたブラウザーゲームです。
+**v0.2.0 Prototype** — 相手の発言を読み、嘘を見抜いて勝ち抜く心理戦じゃんけんカードバトル。
+
+🎮 **プレイ**
+
+- GitHub Pages: https://kouheyhey.github.io/logiQuiz/
+- itch.io: https://murikocreation.itch.io/jasokesobattler
+
+## ゲーム内容
+
+グー・チョキ・パーは何度でも使用できます。相手の特徴、使える手、勝負前の一言を読み、出すカードを選んでください。
+
+- あいこでライフを0.5、敗北でライフを1失う
+- 最初の相手はグーだけを出すチュートリアル
+- 通常敵を3〜5人倒すと強敵が出現
+- 強敵は2回勝つと撃破。ライフが0.5回復し、「グチョパ」を1枚獲得
+- グチョパは通常のすべての手に勝つ使い切りカード
+- ライフが0になるとゲームオーバー。リトライで最初から再挑戦
+
+## 操作
+
+- スマートフォン: 出したいカードをタップ
+- PC: 出したいカードをクリック
 
 ## 開発
 
 ```bash
 npm ci
 npm run dev
+npm test
+npm run build
+npm run build:itch
 ```
 
-## GitHub Pages
+ゲームルールの正本は [docs/game-design.md](docs/game-design.md) です。
 
-`.github/workflows/deploy-pages.yml`により、`main`ブランチへpushすると自動的にビルド・公開されます。
+## デプロイ
 
-結果演出の比較モックは、公開URLへ `?view=animation-mock` を付けると開けます。勝利・敗北・AIKOを個別に切り替え、再生できます。
+`main`へのpushでGitHub Actionsが自動ビルドし、GitHub Pagesへ公開します。
 
-1. このフォルダーをGitHubリポジトリとして作成し、既定ブランチを`main`にする。
-2. GitHubのリポジトリ設定で、PagesのSourceに「GitHub Actions」を選ぶ。
-3. `main`へpushする。
+itch.io向けの説明文、カバー画像、リリースノート、HTML5 ZIPは `release/` にまとめています。ButlerのHTML5チャンネルへは `npm run build:itch` の成果物を配信します。
 
-Viteの`base`はActions実行時にリポジトリ名から自動設定されます。
-
-## 元テンプレート
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+結果演出の比較モックは、公開URLへ `?view=animation-mock` を付けると開けます。
